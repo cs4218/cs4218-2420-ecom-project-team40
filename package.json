@@ -8,7 +8,7 @@
     "server": "nodemon server.js",
     "client": "npm start --prefix ./client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "sonarqube": "sonarqube-scanner",
+    "sonarqube": "sonar-scanner",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:frontend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.frontend.config.js",
     "test:backend": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.backend.config.js"
