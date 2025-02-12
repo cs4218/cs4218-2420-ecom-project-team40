@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   // name displayed during tests
   displayName: "frontend",
 
