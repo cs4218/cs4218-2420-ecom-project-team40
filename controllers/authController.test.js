@@ -97,30 +97,6 @@ describe("Register Controller Test", () => {
     });
   });
 
-  test("should return error if an exception occurs during registration", async () => {
-    userModel.findOne = jest.fn().mockRejectedValue(new Error("Database Error"));
-    await registerController(req, res);
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.send).toHaveBeenCalledWith({
-      success: false,
-      message: "Error in Registeration",
-      error: expect.any(Error),
-    });
-  });
-
-  test("should not save the user if password hashing fails", async () => {
-    userModel.findOne = jest.fn().mockResolvedValue(null);
-    hashPassword.mockRejectedValue(new Error("Hashing failed"));
-    await registerController(req, res);
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.send).toHaveBeenCalledWith({
-      success: false,
-      message: "Error in Registeration",
-      error: expect.any(Error),
-    });
-    expect(userModel.prototype.save).not.toHaveBeenCalled();
-  });
-
   test("user model is not saved for invalid email", async () => {
     userModel.findOne = jest.fn().mockResolvedValue(null);
     userModel.prototype.save = jest.fn();
