@@ -27,8 +27,8 @@ module.exports = {
   collectCoverageFrom: ["client/src/pages/Auth/**"],
   coverageThreshold: {
     global: {
-      lines: 10,
-      functions: 10,
+      lines: 80,
+      functions: 80,
     },
   },
 };
