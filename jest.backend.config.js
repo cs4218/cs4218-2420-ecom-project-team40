@@ -7,14 +7,14 @@ module.exports = {
 
   // which test to run
   testMatch: [
-    "<rootDir>/controllers/*.test.js", 
-    "<rootDir>/middlewares/*.test.js"
+    "<rootDir>/controllers/*.test.js",
+    "<rootDir>/middlewares/*.test.js",
+    "<rootDir>/helpers/*.test.js",
   ],
 
   // jest code coverage
   collectCoverage: true,
-  collectCoverageFrom: ["controllers/**"],
-  collectCoverageFrom: ["middlewares/**"],
+  collectCoverageFrom: ["controllers/**", "middlewares/**", "helpers/**"],
   coverageThreshold: {
     global: {
       lines: 80,
