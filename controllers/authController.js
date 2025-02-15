@@ -26,6 +26,12 @@ export const registerController = async (req, res) => {
     if (!phone) {
       return res.send({ message: "Phone no is Required" });
     }
+
+    const phoneRegex = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
+    if (!phoneRegex.test(phone)) {
+      return res.send({ message: "Invalid phone format"});
+    }
+    
     if (!address) {
       return res.send({ message: "Address is Required" });
     }
@@ -62,7 +68,7 @@ export const registerController = async (req, res) => {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Errro in Registeration",
+      message: "Error in Registeration",
       error,
     });
   }
