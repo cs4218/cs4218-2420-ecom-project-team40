@@ -244,7 +244,7 @@ describe("Forgot Password Controller Test", () => {
     req.body.email = "";  // Missing email
     await forgotPasswordController(req, res);
     expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.send).toHaveBeenCalledWith({ message: "Emai is required" });
+    expect(res.send).toHaveBeenCalledWith({ message: "Email is required" });
   });
 
   test("should return error when answer is missing", async () => {
