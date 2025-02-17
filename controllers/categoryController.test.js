@@ -9,13 +9,13 @@ import {
 import categoryModel from "../models/categoryModel";
 import slugify from "slugify";
 
-jest.mock("../models/categoryModel.js");
-jest.mock("slugify", () => jest.fn((name) => name.toLowerCase().replace(/\s+/g, "-")));
+jest.mock("../models/categoryModel.js"); // Mock all categoryModel functions and properties
+jest.mock("slugify", () => jest.fn((name) => name.toLowerCase().replace(/\s+/g, "-"))); // Mock slugify function
 
 describe("Category Controller Tests", () => {
   let req, res;
 
-  beforeEach(() => {
+  beforeEach(() => { // Reset all mocks, clean req and res for each test
     jest.clearAllMocks();
     req = { body: { name: "Electronics" }, params: { id: "category123", slug: "electronics" } };
     res = { status: jest.fn().mockReturnThis(), send: jest.fn(), json: jest.fn() };
