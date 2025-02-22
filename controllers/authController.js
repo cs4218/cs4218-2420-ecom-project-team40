@@ -176,24 +176,35 @@ export const testController = (req, res) => {
   }
 };
 
-//update prfole
+//update profile
 export const updateProfileController = async (req, res) => {
   try {
     const { name, email, password, address, phone } = req.body;
     const user = await userModel.findById(req.user._id);
-    //password
     if (password && password.length < 6) {
-      return res.json({ error: "Passsword is required and 6 character long" });
+      return res.send({ error: "Password must be at least 6 characters long" });
     }
     const hashedPassword = password ? await hashPassword(password) : undefined;
+    const updateData = {
+      name: name || user.name,
+      phone: phone || user.phone,
+      address: address || user.address,
+    };
+
+    if (password) {
+      updateData.password = hashedPassword;
+    }
+    if (email && email !== user.email) {
+      const existingUser = await userModel.findOne({ email });
+      if (existingUser) {
+        return res.send({ error: "Email already in use" });
+      }
+      updateData.email = email; // Only update email if it's different
+    }
+
     const updatedUser = await userModel.findByIdAndUpdate(
       req.user._id,
-      {
-        name: name || user.name,
-        password: hashedPassword || user.password,
-        phone: phone || user.phone,
-        address: address || user.address,
-      },
+      updateData,
       { new: true }
     );
     res.status(200).send({
@@ -205,7 +216,7 @@ export const updateProfileController = async (req, res) => {
     console.log(error);
     res.status(400).send({
       success: false,
-      message: "Error While Update profile",
+      message: "Error While Updating profile",
       error,
     });
   }
