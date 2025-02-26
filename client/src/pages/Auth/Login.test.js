@@ -270,4 +270,30 @@ describe("Login Component", () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalled());
     expect(mockedUsedNavigate).toHaveBeenCalledWith("/");
   });
+
+  it("should show error toast when request fails", async () => {
+    axios.post.mockResolvedValueOnce({ data: { success: false, message: "Login Failed" } });
+
+
+    const { getByPlaceholderText, getByText } = render(
+      <MemoryRouter initialEntries={[{ pathname: "/login" }]}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    fireEvent.change(getByPlaceholderText("Enter Your Email"), {
+      target: { value: "test@example.com" },
+    });
+    fireEvent.change(getByPlaceholderText("Enter Your Password"), {
+      target: { value: "password123" },
+    });
+    fireEvent.click(getByText("LOGIN"));
+
+    await waitFor(() => expect(axios.post).toHaveBeenCalled());
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalled();
+    });
+  });
 });
