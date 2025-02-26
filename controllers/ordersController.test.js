@@ -3,6 +3,7 @@ import orderModel from "../models/orderModel.js";
 import {
   getOrdersController,
   getAllOrdersController,
+  orderStatusController,
 } from "./authController.js";
 
 describe("GetOrders Controller test", () => {
@@ -160,4 +161,61 @@ describe("GetAllOrders Controller test", () => {
       error,
     })
   })
+});
+
+describe("orderStatusController test", () => {
+  let req, res;
+
+  beforeEach(() => {
+    req = {
+      params: {
+        orderId: "33333",
+      },
+      body: {
+        status: "shipped",
+      },
+    };
+
+    res = {
+      json: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    };
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("should update the order status", async () => {
+    const updatedOrder = {
+      _id: "33333",
+      status: "shipped",
+    };
+
+    jest.spyOn(orderModel, "findByIdAndUpdate").mockResolvedValue(updatedOrder);
+
+    await orderStatusController(req, res);
+
+    expect(orderModel.findByIdAndUpdate).toHaveBeenCalled();
+    expect(res.json).toHaveBeenCalledWith(updatedOrder);
+  });
+
+  test(
+    "should return error if error occurs during the update",
+    async () => {
+      const error = new Error("Update failed");
+      jest.spyOn(orderModel, "findByIdAndUpdate").mockRejectedValue(error);
+
+      await orderStatusController(req, res);
+
+      expect(orderModel.findByIdAndUpdate).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.send).toHaveBeenCalledWith({
+        success: false,
+        message: "Error While Updating Order",
+        error,
+      });
+    }
+  );
 });
