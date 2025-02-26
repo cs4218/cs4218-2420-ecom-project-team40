@@ -82,7 +82,7 @@ const ForgotPassword = () => {
             />
           </div>
           <button type="submit" className="btn btn-primary">
-            Reset Password
+            RESET PASSWORD
           </button>
         </form>
       </div>
