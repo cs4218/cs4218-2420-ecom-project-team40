@@ -24,6 +24,14 @@ jest.mock("../../context/search", () => ({
 
 jest.mock("../../hooks/useCategory", () => jest.fn(() => []));
 
+const mockedUsedNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+   ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedUsedNavigate,
+}));
+
+
 // Object.defineProperty(window, "localStorage", {
 //   value: {
 //     setItem: jest.fn(),
@@ -118,8 +126,13 @@ describe("Register Component", () => {
   }); 
 
   it("should register the user successfully", async () => {
-    axios.post.mockResolvedValueOnce({ data: { success: true } });
-
+    axios.post.mockResolvedValueOnce({
+      data: {
+        success: true,
+        user: { id: 1, name: "John Doe", email: "test@example.com" },
+        token: "mockToken",
+      },
+    });
     const { getByText, getByPlaceholderText } = render(
       <MemoryRouter initialEntries={["/register"]}>
         <Routes>
@@ -156,6 +169,7 @@ describe("Register Component", () => {
     expect(toast.success).toHaveBeenCalledWith(
       "Register Successfully, please login"
     );
+    expect(mockedUsedNavigate).toHaveBeenCalledWith("/login");
   });
 
   it ("should show validation error if fields are empty", async () => {

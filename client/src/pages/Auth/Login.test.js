@@ -1,11 +1,10 @@
 import React from "react";
 import { render, fireEvent, waitFor } from "@testing-library/react";
 import axios from "axios";
-import { MemoryRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
 import "@testing-library/jest-dom/extend-expect";
 import toast from "react-hot-toast";
 import Login from "./Login";
-import ForgotPassword from "./ForgotPassword";
 
 // Mocking axios.post
 jest.mock("axios");
