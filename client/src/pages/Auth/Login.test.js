@@ -273,7 +273,6 @@ describe("Login Component", () => {
   it("should show error toast when request fails", async () => {
     axios.post.mockResolvedValueOnce({ data: { success: false, message: "Login Failed" } });
 
-
     const { getByPlaceholderText, getByText } = render(
       <MemoryRouter initialEntries={[{ pathname: "/login" }]}>
         <Routes>
