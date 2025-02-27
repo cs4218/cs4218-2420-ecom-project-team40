@@ -32,25 +32,25 @@ jest.mock('react-router-dom', () => ({
 }));
 
 
-// Object.defineProperty(window, "localStorage", {
-//   value: {
-//     setItem: jest.fn(),
-//     getItem: jest.fn(),
-//     removeItem: jest.fn(),
-//   },
-//   writable: true,
-// });
+Object.defineProperty(window, "localStorage", {
+  value: {
+    setItem: jest.fn(),
+    getItem: jest.fn(),
+    removeItem: jest.fn(),
+  },
+  writable: true,
+});
 
-// // prevent jest from crashing
-// window.matchMedia =
-//   window.matchMedia ||
-//   function () {
-//     return {
-//       matches: false,
-//       addListener: function () {},
-//       removeListener: function () {},
-//     };
-//   };
+// prevent jest from crashing
+window.matchMedia =
+  window.matchMedia ||
+  function () {
+    return {
+      matches: false,
+      addListener: function () {},
+      removeListener: function () {},
+    };
+  };
 
 describe("Register Component", () => {
   beforeEach(() => {
