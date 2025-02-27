@@ -10,22 +10,35 @@ productCountController,
 productListController,
 searchProductController,
 realtedProductController,
-productCategoryController 
+productCategoryController,
+brainTreePaymentController,
+braintreeTokenController
 } from './productController';
 import productModel from '../models/productModel';
 import categoryModel from '../models/categoryModel';
+import orderModel from "../models/orderModel.js";
 import fs from 'fs';
 import slugify from 'slugify';
 
 jest.mock('../models/productModel');
 jest.mock('../models/categoryModel');
+jest.mock('../models/orderModel.js')
 jest.mock('fs');
 jest.mock('slugify');
 jest.mock('braintree', () => {
   return {
     BraintreeGateway: jest.fn(() => {
       return {
-
+        transaction : {
+          sale: jest.fn((options, callback) => {
+            callback(null, { success: true, transaction: { id: 'test-transaction-id' } })
+          })
+        },
+        clientToken: {
+          generate: jest.fn((options, callback) => {
+            callback(null, { clientToken: 'test-client-token' });
+          })
+        }
       }
     }),
     Environment: {
@@ -814,6 +827,56 @@ describe('productCategoryController', () => {
       success: false,
       error: new Error('Database error'),
       message: 'Error While Getting products',
+    });
+  });
+});
+
+describe('braintreeTokenController', () => {
+  let req, res;
+
+  beforeEach(() => {
+    req = {};
+    res = {
+      status: jest.fn((x) => x),
+      send: jest.fn(),
+    };
+  });
+
+  test('should generate a client token successfully', async () => {
+    await braintreeTokenController(req, res);
+
+    expect(res.send).toHaveBeenCalledWith({ clientToken: 'test-client-token' });
+  });
+});
+
+describe('brainTreePaymentController', () => {
+  let req, res;
+
+  beforeEach(() => {
+    req = {
+      user: {
+        _id: "123456"
+      },
+      body: {
+        nonce: 'fake-nonce',
+        cart: [{ price: 123 }, { price: 456 }],
+      },
+    };
+    res = {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+      json: jest.fn(),
+    };
+  });
+
+  test('should process payment successfully', async () => {
+    await brainTreePaymentController(req, res);
+
+    expect(res.json).toHaveBeenCalledWith({ ok: true });
+    expect(orderModel).toHaveBeenCalledWith({
+      products: [{ price: 123 }, { price: 456 }],
+      payment: { success: true, transaction: { id: 'test-transaction-id' } },
+      buyer: "123456",
     });
   });
 });
