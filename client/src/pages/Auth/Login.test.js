@@ -84,7 +84,7 @@ describe("Login Component", () => {
   });
 
   it("should allow typing email and password", () => {
-    const { getByText, getByPlaceholderText } = render(
+    const { getByPlaceholderText } = render(
       <MemoryRouter initialEntries={["/login"]}>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -169,7 +169,6 @@ describe("Login Component", () => {
       <MemoryRouter initialEntries={["/login"]}>
         <Routes>
           <Route path="/login" element={<Login />} />
-          {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
         </Routes>
       </MemoryRouter>
     );
@@ -290,8 +289,6 @@ describe("Login Component", () => {
     fireEvent.click(getByText("LOGIN"));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalled());
-    await waitFor(() => {
-      expect(toast.error).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(toast.error).toHaveBeenCalled());
   });
 });
