@@ -86,7 +86,7 @@ describe("ForgotPassword Component", () => {
   });
 
   it("should allow typing email, answer and new password", () => {
-    const { getByText, getByPlaceholderText } = render(
+    const { getByPlaceholderText } = render(
       <MemoryRouter initialEntries={["/forgot-password"]}>
         <Routes>
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -238,8 +238,6 @@ describe("ForgotPassword Component", () => {
     fireEvent.click(getByText("RESET PASSWORD"));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalled());
-    await waitFor(() => {
-      expect(toast.error).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(toast.error).toHaveBeenCalled());
   });
 });

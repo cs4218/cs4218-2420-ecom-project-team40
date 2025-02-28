@@ -94,7 +94,7 @@ describe("Register Component", () => {
   });
 
   it ("should allow typing in the inputs", () => {
-    const { getByText, getByPlaceholderText } = render(
+    const { getByPlaceholderText } = render(
       <MemoryRouter initialEntries={["/register"]}>
         <Routes>
           <Route path="/register" element={<Register />} />
@@ -315,9 +315,6 @@ describe("Register Component", () => {
     fireEvent.click(getByText("REGISTER"));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalled());
-    await waitFor(() => {
-      expect(toast.error).toHaveBeenCalled();
-    });
-    
+    await waitFor(() => expect(toast.error).toHaveBeenCalled()); 
   });
 });
