@@ -22,6 +22,10 @@ module.exports = {
   // only run these tests
   testMatch: [
     "<rootDir>/client/src/**/*.test.js",
+    "<rootDir>/client/src/pages/Auth/*.test.js",
+    "<rootDir>/client/src/pages/Search.test.js",
+    "<rootDir>/client/src/context/*.test.js",
+    "<rootDir>/client/src/components/Form/*.test.js",
   ],
 
   // jest code coverage
@@ -30,6 +34,9 @@ module.exports = {
   [
     "client/src/pages/Auth/**", 
     "client/src/pages/user/**",
+    "client/src/pages/Search.js",
+    "client/src/context/search.js",
+    "client/src/components/Form/SearchInput.js",
   ],
   coverageThreshold: {
     global: {
