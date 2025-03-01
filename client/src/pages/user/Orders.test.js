@@ -31,7 +31,7 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedUsedNavigate,
 }));
 
-describe("Login Component", () => {
+describe("Orders Component", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 	});
@@ -55,7 +55,7 @@ describe("Login Component", () => {
     
     axios.get.mockResolvedValue({ data: mockOrders });
     
-    const { getByText } = render(
+    render(
       <MemoryRouter>
         <Orders />
       </MemoryRouter>
@@ -66,13 +66,13 @@ describe("Login Component", () => {
 		});
 
     await waitFor(() => {
-      expect(getByText("All Orders")).toBeInTheDocument();
-      expect(getByText("John Doe")).toBeInTheDocument();
-      expect(getByText("Not Process")).toBeInTheDocument();
-      expect(getByText("Product 1")).toBeInTheDocument();
-			expect(getByText("Success")).toBeInTheDocument();
+      expect(screen.getByText("All Orders")).toBeInTheDocument();
+      expect(screen.getByText("John Doe")).toBeInTheDocument();
+      expect(screen.getByText("Not Process")).toBeInTheDocument();
+      expect(screen.getByText("Product 1")).toBeInTheDocument();
+			expect(screen.getByText("Success")).toBeInTheDocument();
 
-			expect(getByText("Product 2")).toBeInTheDocument();
+			expect(screen.getByText("Product 2")).toBeInTheDocument();
     });
   });
 
@@ -95,7 +95,7 @@ describe("Login Component", () => {
     
     axios.get.mockResolvedValue({ data: mockOrders });
     
-    const { getByText } = render(
+    render(
       <MemoryRouter>
         <Orders />
       </MemoryRouter>
@@ -106,13 +106,13 @@ describe("Login Component", () => {
 		});
 
     await waitFor(() => {
-      expect(getByText("All Orders")).toBeInTheDocument();
-      expect(getByText("John Doe")).toBeInTheDocument();
-      expect(getByText("Not Process")).toBeInTheDocument();
-      expect(getByText("Product 1")).toBeInTheDocument();
-			expect(getByText("Failed")).toBeInTheDocument();
+      expect(screen.getByText("All Orders")).toBeInTheDocument();
+      expect(screen.getByText("John Doe")).toBeInTheDocument();
+      expect(screen.getByText("Not Process")).toBeInTheDocument();
+      expect(screen.getByText("Product 1")).toBeInTheDocument();
+			expect(screen.getByText("Failed")).toBeInTheDocument();
 
-			expect(getByText("Product 2")).toBeInTheDocument();
+			expect(screen.getByText("Product 2")).toBeInTheDocument();
     });
   });
 
