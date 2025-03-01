@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import axios from "axios";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import "@testing-library/jest-dom/extend-expect";
@@ -56,7 +56,7 @@ describe("ForgotPassword Component", () => {
   });
 
   it("renders forgot password form", () => {
-    const { getByText, getByPlaceholderText } = render(
+    render(
       <MemoryRouter initialEntries={["/forgot-password"]}>
         <Routes>
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -64,14 +64,14 @@ describe("ForgotPassword Component", () => {
       </MemoryRouter>
     );
 
-    expect(getByText("FORGOT PASSWORD FORM")).toBeInTheDocument();
-    expect(getByPlaceholderText("Enter Your Email")).toBeInTheDocument();
-    expect(getByPlaceholderText("Enter Your Answer")).toBeInTheDocument();
-    expect(getByPlaceholderText("Enter Your New Password")).toBeInTheDocument();
+    expect(screen.getByText("FORGOT PASSWORD FORM")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter Your Email")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter Your Answer")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter Your New Password")).toBeInTheDocument();
   });
 
   it("inputs should be initially empty", () => {
-    const { getByText, getByPlaceholderText } = render(
+    render(
       <MemoryRouter initialEntries={["/forgot-password"]}>
         <Routes>
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -79,36 +79,36 @@ describe("ForgotPassword Component", () => {
       </MemoryRouter>
     );
 
-    expect(getByText("FORGOT PASSWORD FORM")).toBeInTheDocument();
-    expect(getByPlaceholderText("Enter Your Email").value).toBe("");
-    expect(getByPlaceholderText("Enter Your Answer").value).toBe("");
-    expect(getByPlaceholderText("Enter Your New Password").value).toBe("");
+    expect(screen.getByText("FORGOT PASSWORD FORM")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter Your Email").value).toBe("");
+    expect(screen.getByPlaceholderText("Enter Your Answer").value).toBe("");
+    expect(screen.getByPlaceholderText("Enter Your New Password").value).toBe("");
   });
 
   it("should allow typing email, answer and new password", () => {
-    const { getByPlaceholderText } = render(
+    render(
       <MemoryRouter initialEntries={["/forgot-password"]}>
         <Routes>
           <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       </MemoryRouter>
     );
-    fireEvent.change(getByPlaceholderText("Enter Your Email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Email"), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Answer"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Answer"), {
       target: { value: "Football" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your New Password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your New Password"), {
       target: { value: "password123" },
     });
-    expect(getByPlaceholderText("Enter Your Email").value).toBe(
+    expect(screen.getByPlaceholderText("Enter Your Email").value).toBe(
       "test@example.com"
     );
-    expect(getByPlaceholderText("Enter Your Answer").value).toBe(
+    expect(screen.getByPlaceholderText("Enter Your Answer").value).toBe(
       "Football"
     );
-    expect(getByPlaceholderText("Enter Your New Password").value).toBe(
+    expect(screen.getByPlaceholderText("Enter Your New Password").value).toBe(
       "password123"
     );
   });
@@ -122,7 +122,7 @@ describe("ForgotPassword Component", () => {
       },
     });
 
-    const { getByPlaceholderText, getByText } = render(
+    render(
       <MemoryRouter initialEntries={["/forgot-password"]}>
         <Routes>
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -130,16 +130,16 @@ describe("ForgotPassword Component", () => {
       </MemoryRouter>
     );
 
-    fireEvent.change(getByPlaceholderText("Enter Your Email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Email"), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Answer"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Answer"), {
       target: { value: "Football" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your New Password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your New Password"), {
       target: { value: "password123" },
     });
-    fireEvent.click(getByText("RESET PASSWORD"));
+    fireEvent.click(screen.getByText("RESET PASSWORD"));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalled());
     expect(toast.success).toHaveBeenCalledWith(undefined, {
@@ -156,7 +156,7 @@ describe("ForgotPassword Component", () => {
   it("should display error message on failed password reset", async () => {
     axios.post.mockRejectedValueOnce({ message: "Test for Invalid credentials" });
 
-    const { getByPlaceholderText, getByText } = render(
+    render(
       <MemoryRouter initialEntries={["/forgot-password"]}>
         <Routes>
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -164,23 +164,23 @@ describe("ForgotPassword Component", () => {
       </MemoryRouter>
     );
 
-    fireEvent.change(getByPlaceholderText("Enter Your Email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Email"), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Answer"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Answer"), {
       target: { value: "Football" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your New Password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your New Password"), {
       target: { value: "password123" },
     });
-    fireEvent.click(getByText("RESET PASSWORD"));
+    fireEvent.click(screen.getByText("RESET PASSWORD"));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalled());
     expect(toast.error).toHaveBeenCalledWith("Something went wrong");
   });
 
   it("should not call API if input is empty", async () => {
-    const { getByText } = render(
+    render(
       <MemoryRouter initialEntries={["/forgot-password"]}>
         <Routes>
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -188,13 +188,13 @@ describe("ForgotPassword Component", () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(getByText("RESET PASSWORD"));
+    fireEvent.click(screen.getByText("RESET PASSWORD"));
 
     await waitFor(() => expect(axios.post).not.toHaveBeenCalled());
   });
 
   it("should not call API if email is invalid format", async () => {
-    const { getByPlaceholderText, getByText } = render(
+    render(
       <MemoryRouter initialEntries={["/forgot-password"]}>
         <Routes>
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -202,23 +202,23 @@ describe("ForgotPassword Component", () => {
       </MemoryRouter>
     );
 
-    fireEvent.change(getByPlaceholderText("Enter Your Email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Email"), {
       target: { value: "invalid-email" }, // no @ sign
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Answer"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Answer"), {
       target: { value: "Football" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your New Password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your New Password"), {
       target: { value: "password123" },
     });
-    fireEvent.click(getByText("RESET PASSWORD"));
+    fireEvent.click(screen.getByText("RESET PASSWORD"));
     await waitFor(() => expect(axios.post).not.toHaveBeenCalled());
   });
 
   it("should show error toast when request fails", async () => {
     axios.post.mockResolvedValueOnce({ data: { success: false, message: "Login Failed" } });
 
-    const { getByPlaceholderText, getByText } = render(
+    render(
       <MemoryRouter initialEntries={["/forgot-password"]}>
         <Routes>
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -226,16 +226,16 @@ describe("ForgotPassword Component", () => {
       </MemoryRouter>
     );
 
-    fireEvent.change(getByPlaceholderText("Enter Your Email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Email"), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Answer"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Answer"), {
       target: { value: "Football" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your New Password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your New Password"), {
       target: { value: "password123" },
     });
-    fireEvent.click(getByText("RESET PASSWORD"));
+    fireEvent.click(screen.getByText("RESET PASSWORD"));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalled());
     await waitFor(() => expect(toast.error).toHaveBeenCalled());

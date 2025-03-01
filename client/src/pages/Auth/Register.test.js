@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import axios from "axios";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import "@testing-library/jest-dom/extend-expect";
@@ -58,43 +58,43 @@ describe("Register Component", () => {
   });
 
   it ("renders Register Form", () => {
-    const { getByText, getByPlaceholderText } = render(
+    render(
       <MemoryRouter initialEntries={["/register"]}>
         <Routes>
           <Route path="/register" element={<Register />} />
         </Routes>
       </MemoryRouter>
     );
-    expect(getByText("REGISTER FORM")).toBeInTheDocument();
-    expect(getByPlaceholderText("Enter Your Name")).toBeInTheDocument();
-    expect(getByPlaceholderText("Enter Your Email")).toBeInTheDocument();
-    expect(getByPlaceholderText("Enter Your Password")).toBeInTheDocument();
-    expect(getByPlaceholderText("Enter Your Phone")).toBeInTheDocument();
-    expect(getByPlaceholderText("Enter Your Address")).toBeInTheDocument();
-    expect(getByPlaceholderText("Enter Your DOB")).toBeInTheDocument();
-    expect(getByPlaceholderText("What is Your Favorite sports")).toBeInTheDocument();
+    expect(screen.getByText("REGISTER FORM")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter Your Name")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter Your Email")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter Your Password")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter Your Phone")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter Your Address")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter Your DOB")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("What is Your Favorite sports")).toBeInTheDocument();
   });
 
   it ("inputs should be initially empty" , () => {  
-    const { getByText, getByPlaceholderText } = render(
+    render(
       <MemoryRouter initialEntries={["/register"]}>
         <Routes>
           <Route path="/register" element={<Register />} />
         </Routes>
       </MemoryRouter>
     );
-    expect(getByText("REGISTER FORM")).toBeInTheDocument();
-    expect(getByPlaceholderText("Enter Your Name").value).toBe("");
-    expect(getByPlaceholderText("Enter Your Email").value).toBe("");
-    expect(getByPlaceholderText("Enter Your Password").value).toBe("");
-    expect(getByPlaceholderText("Enter Your Phone").value).toBe("");
-    expect(getByPlaceholderText("Enter Your Address").value).toBe("");
-    expect(getByPlaceholderText("Enter Your DOB").value).toBe("");
-    expect(getByPlaceholderText("What is Your Favorite sports").value).toBe("");
+    expect(screen.getByText("REGISTER FORM")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Enter Your Name").value).toBe("");
+    expect(screen.getByPlaceholderText("Enter Your Email").value).toBe("");
+    expect(screen.getByPlaceholderText("Enter Your Password").value).toBe("");
+    expect(screen.getByPlaceholderText("Enter Your Phone").value).toBe("");
+    expect(screen.getByPlaceholderText("Enter Your Address").value).toBe("");
+    expect(screen.getByPlaceholderText("Enter Your DOB").value).toBe("");
+    expect(screen.getByPlaceholderText("What is Your Favorite sports").value).toBe("");
   });
 
   it ("should allow typing in the inputs", () => {
-    const { getByPlaceholderText } = render(
+    render(
       <MemoryRouter initialEntries={["/register"]}>
         <Routes>
           <Route path="/register" element={<Register />} />
@@ -102,25 +102,25 @@ describe("Register Component", () => {
       </MemoryRouter>
     );
 
-    fireEvent.change(getByPlaceholderText("Enter Your Name"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Name"), {
       target: { value: "John Doe" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Email"), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Password"), {
       target: { value: "password123" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Phone"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Phone"), {
       target: { value: "1234567890" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Address"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Address"), {
       target: { value: "123 Street" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your DOB"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your DOB"), {
       target: { value: "2000-01-01" },
     });
-    fireEvent.change(getByPlaceholderText("What is Your Favorite sports"), {
+    fireEvent.change(screen.getByPlaceholderText("What is Your Favorite sports"), {
       target: { value: "Football" },
     });
   }); 
@@ -133,7 +133,7 @@ describe("Register Component", () => {
         token: "mockToken",
       },
     });
-    const { getByText, getByPlaceholderText } = render(
+    render(
       <MemoryRouter initialEntries={["/register"]}>
         <Routes>
           <Route path="/register" element={<Register />} />
@@ -141,29 +141,29 @@ describe("Register Component", () => {
       </MemoryRouter>
     );
 
-    fireEvent.change(getByPlaceholderText("Enter Your Name"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Name"), {
       target: { value: "John Doe" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Email"), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Password"), {
       target: { value: "password123" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Phone"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Phone"), {
       target: { value: "1234567890" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Address"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Address"), {
       target: { value: "123 Street" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your DOB"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your DOB"), {
       target: { value: "2000-01-01" },
     });
-    fireEvent.change(getByPlaceholderText("What is Your Favorite sports"), {
+    fireEvent.change(screen.getByPlaceholderText("What is Your Favorite sports"), {
       target: { value: "Football" },
     });
 
-    fireEvent.click(getByText("REGISTER"));
+    fireEvent.click(screen.getByText("REGISTER"));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalled());
     expect(toast.success).toHaveBeenCalledWith(
@@ -173,7 +173,7 @@ describe("Register Component", () => {
   });
 
   it ("should show validation error if fields are empty", async () => {
-    const { getByText, getByPlaceholderText } = render(
+    render(
       <MemoryRouter initialEntries={["/register"]}>
         <Routes>
           <Route path="/register" element={<Register />} />
@@ -181,26 +181,26 @@ describe("Register Component", () => {
       </MemoryRouter>
     );
 
-    fireEvent.change(getByPlaceholderText("Enter Your Email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Email"), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Password"), {
       target: { value: "password123" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Phone"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Phone"), {
       target: { value: "1234567890" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Address"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Address"), {
       target: { value: "123 Street" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your DOB"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your DOB"), {
       target: { value: "2000-01-01" },
     });
-    fireEvent.change(getByPlaceholderText("What is Your Favorite sports"), {
+    fireEvent.change(screen.getByPlaceholderText("What is Your Favorite sports"), {
       target: { value: "Football" },
     });
 
-    fireEvent.click(getByText("REGISTER"));
+    fireEvent.click(screen.getByText("REGISTER"));
 
     await waitFor(() => expect(axios.post).not.toHaveBeenCalled());
   });
@@ -208,7 +208,7 @@ describe("Register Component", () => {
   it("should display error message on failed registration", async () => {
     axios.post.mockRejectedValueOnce({ message: "Test for User already exists" });
 
-    const { getByText, getByPlaceholderText } = render(
+    render(
       <MemoryRouter initialEntries={["/register"]}>
         <Routes>
           <Route path="/register" element={<Register />} />
@@ -216,36 +216,36 @@ describe("Register Component", () => {
       </MemoryRouter>
     );
 
-    fireEvent.change(getByPlaceholderText("Enter Your Name"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Name"), {
       target: { value: "John Doe" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Email"), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Password"), {
       target: { value: "password123" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Phone"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Phone"), {
       target: { value: "1234567890" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Address"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Address"), {
       target: { value: "123 Street" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your DOB"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your DOB"), {
       target: { value: "2000-01-01" },
     });
-    fireEvent.change(getByPlaceholderText("What is Your Favorite sports"), {
+    fireEvent.change(screen.getByPlaceholderText("What is Your Favorite sports"), {
       target: { value: "Football" },
     });
 
-    fireEvent.click(getByText("REGISTER"));
+    fireEvent.click(screen.getByText("REGISTER"));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalled());
     expect(toast.error).toHaveBeenCalledWith("Something went wrong");
   });
 
   it ("should not accept invalid email", async () => {
-    const { getByText, getByPlaceholderText } = render(
+    render(
       <MemoryRouter initialEntries={["/register"]}>
         <Routes>
           <Route path="/register" element={<Register />} />
@@ -253,36 +253,36 @@ describe("Register Component", () => {
       </MemoryRouter>
     );
 
-    fireEvent.change(getByPlaceholderText("Enter Your Name"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Name"), {
       target: { value: "John Doe" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Email"), {
       target: { value: "invalid-email" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Password"), {
       target: { value: "password123" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Phone"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Phone"), {
       target: { value: "1234567890" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Address"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Address"), {
       target: { value: "123 Street" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your DOB"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your DOB"), {
       target: { value: "2000-01-01" },
     });
-    fireEvent.change(getByPlaceholderText("What is Your Favorite sports"), {
+    fireEvent.change(screen.getByPlaceholderText("What is Your Favorite sports"), {
       target: { value: "Football" },
     });
 
-    fireEvent.click(getByText("REGISTER"));
+    fireEvent.click(screen.getByText("REGISTER"));
     await waitFor(() => expect(axios.post).not.toHaveBeenCalled());
   });
 
   it("should show error toast when request fails", async () => {
     axios.post.mockResolvedValueOnce({ data: { success: false, message: "Registration Failed" } });
 
-    const { getByText, getByPlaceholderText } = render(
+    render(
       <MemoryRouter initialEntries={["/register"]}>
         <Routes>
           <Route path="/register" element={<Register />} />
@@ -290,29 +290,29 @@ describe("Register Component", () => {
       </MemoryRouter>
     );
 
-    fireEvent.change(getByPlaceholderText("Enter Your Name"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Name"), {
       target: { value: "John Doe" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Email"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Email"), {
       target: { value: "test@example.com" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Password"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Password"), {
       target: { value: "password123" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Phone"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Phone"), {
       target: { value: "1234567890" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your Address"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your Address"), {
       target: { value: "123 Street" },
     });
-    fireEvent.change(getByPlaceholderText("Enter Your DOB"), {
+    fireEvent.change(screen.getByPlaceholderText("Enter Your DOB"), {
       target: { value: "2000-01-01" },
     });
-    fireEvent.change(getByPlaceholderText("What is Your Favorite sports"), {
+    fireEvent.change(screen.getByPlaceholderText("What is Your Favorite sports"), {
       target: { value: "Football" },
     });
 
-    fireEvent.click(getByText("REGISTER"));
+    fireEvent.click(screen.getByText("REGISTER"));
 
     await waitFor(() => expect(axios.post).toHaveBeenCalled());
     await waitFor(() => expect(toast.error).toHaveBeenCalled()); 
