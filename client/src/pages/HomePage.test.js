@@ -1,18 +1,10 @@
-
 import React from "react";
-import {
-  render,
-  fireEvent,
-  waitFor,
-  getByRole,
-  queryByText,
-} from "@testing-library/react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
 import axios from "axios";
-import { MemoryRouter, Routes, Route } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import HomePage from "./HomePage";
 import "@testing-library/jest-dom/extend-expect";
 import toast from "react-hot-toast";
-import { Prices } from "../components/Prices";
 
 // Mock dependencies
 jest.mock("axios");
@@ -26,15 +18,14 @@ jest.mock("./../components/Layout", () => ({ children, ...props }) => (
 ));
 
 jest.mock("react-hot-toast");
-jest.mock("../styles/Homepages.css", () => ({}), { virtual: true }); // TODO: Temporary fix, remove before commit
 
 describe("HomePage Component", () => {
   beforeEach(() => {
-    // stub APIs
     jest.clearAllMocks();
 
+    //Stub apis
     axios.get.mockImplementation((url) => {
-      // Mock get category call
+      // Stub axios calls
       if (url === "/api/v1/product/product-list/1") {
         return Promise.resolve({
           data: {
@@ -54,7 +45,7 @@ describe("HomePage Component", () => {
           },
         });
       }
-      // Default mock for other API calls
+      // Default stub for other API calls
       return Promise.resolve({ data: {} });
     });
   });
@@ -117,7 +108,7 @@ describe("HomePage Component", () => {
   it("filter prices component is loaded", async () => {
     // Arrange for product related tests below
     axios.get.mockImplementation((url) => {
-      // Mock get category call
+      // Stub API calls
       if (url === "/api/v1/product/product-list/1") {
         return Promise.resolve({
           data: {
@@ -156,7 +147,7 @@ describe("HomePage Component", () => {
           },
         });
       }
-      // Default mock for other API calls
+      // Default stub for other API calls
       return Promise.resolve({ data: {} });
     });
     // Arrange
@@ -192,7 +183,7 @@ describe("HomePage Component", () => {
   it("product component is loaded", async () => {
     // Arrange for product
     axios.get.mockImplementation((url) => {
-      // Mock get category call
+      // Stub API calls
       if (url === "/api/v1/product/product-list/1") {
         return Promise.resolve({
           data: {
@@ -231,7 +222,7 @@ describe("HomePage Component", () => {
           },
         });
       }
-      // Default mock for other API calls
+      // Default stub for other API calls
       return Promise.resolve({ data: {} });
     });
     // Act
@@ -257,7 +248,7 @@ describe("HomePage Component", () => {
   it("product component is added to cart", async () => {
     // Arrange for product
     axios.get.mockImplementation((url) => {
-      // Mock get category call
+      // Stub API calls
       if (url === "/api/v1/product/product-list/1") {
         return Promise.resolve({
           data: {
@@ -287,7 +278,7 @@ describe("HomePage Component", () => {
           },
         });
       }
-      // Default mock for other API calls
+      // Default stub for other API calls
       return Promise.resolve({ data: {} });
     });
 
@@ -310,7 +301,7 @@ describe("HomePage Component", () => {
   it("filter 1 product out of 2 using category successfully", async () => {
     // Arrange for product
     axios.get.mockImplementation((url) => {
-      // Mock get category call
+      // Stub API calls
       if (url === "/api/v1/product/product-list/1") {
         return Promise.resolve({
           data: {
@@ -354,12 +345,12 @@ describe("HomePage Component", () => {
           },
         });
       }
-      // Default mock for other API calls
+      // Default stub for other API calls
       return Promise.resolve({ data: {} });
     });
 
     axios.post.mockImplementation((url, data) => {
-      // Mock get category call
+      // Stub API calls
       if (url === "/api/v1/product/product-filters") {
         if (data.checked[0] === "1") {
           return Promise.resolve({
@@ -381,7 +372,7 @@ describe("HomePage Component", () => {
           });
         }
       }
-      // Default mock for other API calls
+      // Default stub for other API calls
       return Promise.resolve({ data: {} });
     });
 
@@ -424,7 +415,7 @@ describe("HomePage Component", () => {
     const radioSelected = [100, 9999]; // setup radio selected price
 
     axios.get.mockImplementation((url) => {
-      // Mock get category call
+      // Stub API calls
       if (url === "/api/v1/product/product-list/1") {
         return Promise.resolve({
           data: {
@@ -465,12 +456,12 @@ describe("HomePage Component", () => {
           },
         });
       }
-      // Default mock for other API calls
+      // Default stub for other API calls
       return Promise.resolve({ data: {} });
     });
 
     axios.post.mockImplementation((url, data) => {
-      // Mock get category call
+      // Stub API calls
       if (url === "/api/v1/product/product-filters") {
         if (
           data.radio[0] === radioSelected[0] &&
@@ -495,7 +486,7 @@ describe("HomePage Component", () => {
           });
         }
       }
-      // Default mock for other API calls
+      // Default stub for other API calls
       return Promise.resolve({ data: {} });
     });
 
@@ -539,7 +530,7 @@ describe("HomePage Component", () => {
     const categorySelected = ["1"]; // setup category selected
 
     axios.get.mockImplementation((url) => {
-      // Mock get category call
+      // Stub API calls
       if (url === "/api/v1/product/product-list/1") {
         return Promise.resolve({
           data: {
@@ -583,12 +574,12 @@ describe("HomePage Component", () => {
           },
         });
       }
-      // Default mock for other API calls
+      // Default stub for other API calls
       return Promise.resolve({ data: {} });
     });
 
     axios.post.mockImplementation((url, data) => {
-      // Mock get category call
+      // Stub API calls
       if (url === "/api/v1/product/product-filters") {
         if (
           data.radio[0] === radioSelected[0] &&
@@ -614,7 +605,7 @@ describe("HomePage Component", () => {
           });
         }
       }
-      // Default mock for other API calls
+      // Default stub for other API calls
       return Promise.resolve({ data: {} });
     });
 
@@ -659,7 +650,7 @@ describe("HomePage Component", () => {
   it("renders loadmore button", async () => {
     // Arrange for more than 1 page
     axios.get.mockImplementation((url) => {
-      // Mock get category call
+      // Stub API calls
       if (url === "/api/v1/product/product-list/1") {
         return Promise.resolve({
           data: {
@@ -708,7 +699,7 @@ describe("HomePage Component", () => {
           data: { total: 3 },
         });
       }
-      // Default mock for other API calls
+      // Default stub for other API calls
       return Promise.resolve({ data: {} });
     });
 
@@ -730,7 +721,7 @@ describe("HomePage Component", () => {
   it("loadmore button gets second page successfully", async () => {
     // Arrange for more than 1 page
     axios.get.mockImplementation((url) => {
-      // Mock get category call
+      // Stub API calls
       if (url === "/api/v1/product/product-list/1") {
         return Promise.resolve({
           data: {
@@ -779,7 +770,7 @@ describe("HomePage Component", () => {
           data: { total: 3 },
         });
       }
-      // Default mock for other API calls
+      // Default stub for other API calls
       return Promise.resolve({ data: {} });
     });
 
