@@ -214,9 +214,8 @@ const HomePage = () => {
                   <>
                     {" "}
                     Loadmore
-                    {/* <AiOutlineReload /> */}
+                    <AiOutlineReload />
                   </>
-                  // Bug AiOutlineReload causing object to be rendered as element
                 )}
               </button>
             )}
