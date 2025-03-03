@@ -405,9 +405,9 @@ describe("HomePage Component", () => {
       expect(queryByText("Nice computer")).not.toBeInTheDocument();
     });
 
-    // Assert only one product is shown and loadmore button should not show despite total count is 2
+    // Assert only one product is shown and Load more button should not show despite total count is 2
     expect(getByText("Nice book")).toBeInTheDocument();
-    expect(queryByText("Loadmore")).not.toBeInTheDocument();
+    expect(queryByText("Load more")).not.toBeInTheDocument();
   });
 
   it("filter 1 product out of 2 using price successfully", async () => {
@@ -519,9 +519,9 @@ describe("HomePage Component", () => {
       expect(queryByText("Nice book")).not.toBeInTheDocument();
     });
 
-    // Assert only one product is shown and loadmore button should not show despite total count is 2
+    // Assert only one product is shown and Load more button should not show despite total count is 2
     expect(getByText("Nice computer")).toBeInTheDocument();
-    expect(queryByText("Loadmore")).not.toBeInTheDocument();
+    expect(queryByText("Load more")).not.toBeInTheDocument();
   });
 
   it("filter 1 product out of 2 using price and categories successfully", async () => {
@@ -642,12 +642,12 @@ describe("HomePage Component", () => {
       expect(queryByText("Nice computer")).not.toBeInTheDocument();
     });
 
-    // Assert only one product is shown and loadmore button should not show despite total count is 2
+    // Assert only one product is shown and Load more button should not show despite total count is 2
     expect(getByText("Nice book")).toBeInTheDocument();
-    expect(queryByText("Loadmore")).not.toBeInTheDocument();
+    expect(queryByText("Load more")).not.toBeInTheDocument();
   });
 
-  it("renders loadmore button", async () => {
+  it("renders Load more button", async () => {
     // Arrange for more than 1 page
     axios.get.mockImplementation((url) => {
       // Stub API calls
@@ -713,12 +713,12 @@ describe("HomePage Component", () => {
     await waitFor(() => {
       expect(axios.get).toHaveBeenCalledWith("/api/v1/product/product-count");
 
-      // Assert loadmore button is present
-      expect(getByText("Loadmore")).toBeInTheDocument();
+      // Assert Load more button is present
+      expect(getByText("Load more")).toBeInTheDocument();
     });
   });
 
-  it("loadmore button gets second page successfully", async () => {
+  it("Load more button gets second page successfully", async () => {
     // Arrange for more than 1 page
     axios.get.mockImplementation((url) => {
       // Stub API calls
@@ -784,14 +784,14 @@ describe("HomePage Component", () => {
     await waitFor(() => {
       expect(axios.get).toHaveBeenCalledWith("/api/v1/product/product-count");
 
-      // Assert loadmore button is present
-      expect(getByText("Loadmore")).toBeInTheDocument();
+      // Assert Load more button is present
+      expect(getByText("Load more")).toBeInTheDocument();
     });
 
-    fireEvent.click(getByText("Loadmore"));
+    fireEvent.click(getByText("Load more"));
 
     await waitFor(() => {
-      // Assert loadmore button works
+      // Assert Load more button works
       expect(getByText("Nice phone")).toBeInTheDocument();
     });
   });

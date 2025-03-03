@@ -213,7 +213,7 @@ const HomePage = () => {
                 ) : (
                   <>
                     {" "}
-                    Loadmore
+                    Load more
                     <AiOutlineReload />
                   </>
                 )}
