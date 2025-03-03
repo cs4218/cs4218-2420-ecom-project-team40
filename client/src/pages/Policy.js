@@ -12,14 +12,11 @@ const Policy = () => {
             style={{ width: "100%" }}
           />
         </div>
-        <div className="col-md-4">
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
+        <div className="col-md-4 p-2">
+          <p>
+            This website collects data from users for the purposes of
+            facilitating the services rendered by Virtual Vault.
+          </p>
         </div>
       </div>
     </Layout>

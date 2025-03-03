@@ -27,6 +27,8 @@ module.exports = {
     "<rootDir>/client/src/context/*.test.js",
     "<rootDir>/client/src/components/Form/*.test.js",
     "<rootDir>/client/src/pages/HomePage.test.js",
+    "<rootDir>/client/src/pages/Contact.test.js",
+    "<rootDir>/client/src/pages/Policy.test.js",
   ],
 
   // jest code coverage
@@ -39,6 +41,8 @@ module.exports = {
     "client/src/context/search.js",
     "client/src/components/Form/SearchInput.js",
     "client/src/pages/HomePage.js",
+    "client/src/pages/Contact.js",
+    "client/src/pages/Policy.js",
   ],
   coverageThreshold: {
     global: {
