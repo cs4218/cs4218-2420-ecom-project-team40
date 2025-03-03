@@ -24,6 +24,7 @@ describe("Policy Page Component", () => {
     // Assert
     // Check for contactus image using alt text
     expect(getByAltText("contactus")).toBeInTheDocument();
+    expect(getByText(/PRIVACY POLICY/)).toBeInTheDocument();
     expect(
       getByText(
         /This website collects data from users for the purposes of facilitating the services rendered by Virtual Vault./
