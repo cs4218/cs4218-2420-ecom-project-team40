@@ -39,9 +39,11 @@ module.exports = {
 
   collectCoverageFrom: [
     "client/src/pages/Auth/**",
-    "client/src/pages/user/**",
+    "client/src/pages/user/Dashboard.js",
+    "client/src/pages/user/Orders.js",
     "client/src/pages/Search.js",
     "client/src/context/search.js",
+    "client/src/context/auth.js",
     "client/src/components/Form/SearchInput.js",
     "client/src/pages/HomePage.js",
     "client/src/pages/Contact.js",
