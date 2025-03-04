@@ -13,13 +13,11 @@ const Policy = () => {
           />
         </div>
         <div className="col-md-4">
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
-          <p>add privacy policy</p>
+          <h1 className="bg-dark p-2 text-white text-center">PRIVACY POLICY</h1>
+          <p>
+            This website collects data from users for the purposes of
+            facilitating the services rendered by Virtual Vault.
+          </p>
         </div>
       </div>
     </Layout>
