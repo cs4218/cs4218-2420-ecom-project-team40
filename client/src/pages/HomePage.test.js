@@ -55,7 +55,7 @@ describe("HomePage Component", () => {
 
   it("render homepage successfully", async () => {
     // Act
-    const { getByText, getByRole } = render(
+    const { getByText, getByAltText } = render(
       <MemoryRouter>
         <HomePage />
       </MemoryRouter>
