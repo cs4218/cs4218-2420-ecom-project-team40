@@ -11,11 +11,14 @@ jest.mock("axios");
 jest.mock("../context/cart", () => ({
   useCart: () => [[], jest.fn()],
 }));
-jest.mock("./../components/Layout", () => ({ children, ...props }) => (
-  <div data-testid="layout-mock" {...props}>
-    {children}
-  </div>
-));
+jest.mock(
+  "./../components/Layout",
+  () =>
+    (
+      { children, ...props } // Reference from copilot
+    ) =>
+      <div {...props}>{children}</div>
+);
 
 jest.mock("react-hot-toast");
 
@@ -52,7 +55,7 @@ describe("HomePage Component", () => {
 
   it("render homepage successfully", async () => {
     // Act
-    const { getByText, getByPlaceholderText, getByRole } = render(
+    const { getByText, getByAltText } = render(
       <MemoryRouter>
         <HomePage />
       </MemoryRouter>
@@ -66,8 +69,7 @@ describe("HomePage Component", () => {
     expect(getByText("Filter By Price")).toBeInTheDocument();
     expect(getByText("All Products")).toBeInTheDocument();
     expect(getByText("RESET FILTERS")).toBeInTheDocument();
-    const banner = getByRole("img", { name: "bannerimage" }); // Check for banner image
-    expect(banner).toBeInTheDocument();
+    expect(getByAltText("bannerimage")).toBeInTheDocument(); // check for banner image using alt text
   });
 
   it("category component is loaded", async () => {
@@ -461,7 +463,7 @@ describe("HomePage Component", () => {
     });
 
     axios.post.mockImplementation((url, data) => {
-      // Stub API calls
+      // Stub API calls for selected filter values
       if (url === "/api/v1/product/product-filters") {
         if (
           data.radio[0] === radioSelected[0] &&
@@ -579,7 +581,7 @@ describe("HomePage Component", () => {
     });
 
     axios.post.mockImplementation((url, data) => {
-      // Stub API calls
+      // Stub API calls for selected filter values
       if (url === "/api/v1/product/product-filters") {
         if (
           data.radio[0] === radioSelected[0] &&
@@ -791,7 +793,7 @@ describe("HomePage Component", () => {
     fireEvent.click(getByText("Load more"));
 
     await waitFor(() => {
-      // Assert Load more button works
+      // Assert Load more button works by checking next page product shows
       expect(getByText("Nice phone")).toBeInTheDocument();
     });
   });
