@@ -101,7 +101,9 @@ const HomePage = () => {
         checked,
         radio,
       });
+      console.log(data);
       setProducts(data?.products);
+      setTotal(data?.total);
     } catch (error) {
       console.log(error);
     }
@@ -211,7 +213,8 @@ const HomePage = () => {
                 ) : (
                   <>
                     {" "}
-                    Loadmore <AiOutlineReload />
+                    Load more
+                    <AiOutlineReload />
                   </>
                 )}
               </button>
