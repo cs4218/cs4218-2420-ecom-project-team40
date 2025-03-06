@@ -281,9 +281,9 @@ export const orderStatusController = async (req, res) => {
 
 export const getAllUsersController = async (req, res) => {
   try {
-    const orders = await userModel.find().select("-password");
+    const users = await userModel.find().select("-password");
 
-    res.json(orders);
+    res.json(users);
   } catch (error) {
     console.log(error);
     res.status(500).send({

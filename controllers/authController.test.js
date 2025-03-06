@@ -1,10 +1,15 @@
-import { jest } from "@jest/globals";
-import { registerController, loginController, forgotPasswordController, updateProfileController } from "./authController";
+import { expect, jest } from "@jest/globals";
+import {
+  registerController,
+  loginController,
+  forgotPasswordController,
+  updateProfileController,
+  getAllUsersController,
+} from "./authController";
 import userModel from "../models/userModel";
 import { hashPassword } from "./../helpers/authHelper.js";
 import { comparePassword } from "../helpers/authHelper.js";
 import JWT from "jsonwebtoken";
-
 
 // Mock external dependencies
 jest.mock("../models/userModel.js");
@@ -76,7 +81,9 @@ describe("Register Controller Test", () => {
   });
 
   test("should return error if the user already exists", async () => {
-    userModel.findOne = jest.fn().mockResolvedValue({ email: "john.doe@example.com" });
+    userModel.findOne = jest
+      .fn()
+      .mockResolvedValue({ email: "john.doe@example.com" });
     await registerController(req, res);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.send).toHaveBeenCalledWith({
@@ -104,7 +111,7 @@ describe("Register Controller Test", () => {
   test("user model is not saved for invalid email", async () => {
     userModel.findOne = jest.fn().mockResolvedValue(null);
     userModel.prototype.save = jest.fn();
-    
+
     hashPassword.mockResolvedValue("hashedPassword");
 
     req.body.email = "invalid-email";
@@ -116,15 +123,14 @@ describe("Register Controller Test", () => {
   test("user model is not saved for invalid phone no", async () => {
     userModel.findOne = jest.fn().mockResolvedValue(null);
     userModel.prototype.save = jest.fn();
-    
+
     hashPassword.mockResolvedValue("hashedPassword");
 
-    req.body.phone = "invalidPhone";  
+    req.body.phone = "invalidPhone";
     await registerController(req, res);
     expect(res.send).toHaveBeenCalledWith({ message: "Invalid phone format" });
     expect(userModel.prototype.save).not.toHaveBeenCalled();
   });
-  
 });
 
 describe("Login Controller Test", () => {
@@ -166,7 +172,10 @@ describe("Login Controller Test", () => {
   });
 
   test("should return error when password is incorrect", async () => {
-    userModel.findOne = jest.fn().mockResolvedValue({ email: "john.doe@example.com", password: "hashedpassword" });
+    userModel.findOne = jest.fn().mockResolvedValue({
+      email: "john.doe@example.com",
+      password: "hashedpassword",
+    });
     comparePassword.mockResolvedValue(false); // Password doesn't match
     await loginController(req, res);
     expect(res.status).toHaveBeenCalledWith(200);
@@ -177,16 +186,16 @@ describe("Login Controller Test", () => {
   });
 
   test("should login successfully and return token when credentials are correct", async () => {
-    const mockUser = { 
-      _id: "user123", 
-      name: "John Doe", 
-      email: "john.doe@example.com", 
-      phone: "12344000", 
-      address: "123 Street", 
-      role: "user", 
-      password: "hashedpassword" 
+    const mockUser = {
+      _id: "user123",
+      name: "John Doe",
+      email: "john.doe@example.com",
+      phone: "12344000",
+      address: "123 Street",
+      role: "user",
+      password: "hashedpassword",
     };
-    
+
     userModel.findOne = jest.fn().mockResolvedValue(mockUser); // User found
     comparePassword.mockResolvedValue(true); // Password matches
     JWT.sign = jest.fn().mockReturnValue("mockToken"); // Mock JWT token generation
@@ -210,7 +219,9 @@ describe("Login Controller Test", () => {
   });
 
   test("should return error if an exception occurs during login", async () => {
-    userModel.findOne = jest.fn().mockRejectedValue(new Error("Database Error"));
+    userModel.findOne = jest
+      .fn()
+      .mockRejectedValue(new Error("Database Error"));
     await loginController(req, res);
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith({
@@ -241,28 +252,30 @@ describe("Forgot Password Controller Test", () => {
   });
 
   test("should return error when email is missing", async () => {
-    req.body.email = "";  // Missing email
+    req.body.email = ""; // Missing email
     await forgotPasswordController(req, res);
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.send).toHaveBeenCalledWith({ message: "Email is required" });
   });
 
   test("should return error when answer is missing", async () => {
-    req.body.answer = "";  // Missing answer
+    req.body.answer = ""; // Missing answer
     await forgotPasswordController(req, res);
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.send).toHaveBeenCalledWith({ message: "answer is required" });
   });
 
   test("should return error when new password is missing", async () => {
-    req.body.newPassword = "";  // Missing new password
+    req.body.newPassword = ""; // Missing new password
     await forgotPasswordController(req, res);
     expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.send).toHaveBeenCalledWith({ message: "New Password is required" });
+    expect(res.send).toHaveBeenCalledWith({
+      message: "New Password is required",
+    });
   });
 
   test("should return error if no user is found with the provided email and answer", async () => {
-    userModel.findOne = jest.fn().mockResolvedValue(null);  // User not found
+    userModel.findOne = jest.fn().mockResolvedValue(null); // User not found
     await forgotPasswordController(req, res);
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.send).toHaveBeenCalledWith({
@@ -279,13 +292,15 @@ describe("Forgot Password Controller Test", () => {
       password: "oldpassword123",
     };
 
-    userModel.findOne = jest.fn().mockResolvedValue(mockUser);  // User found
-    hashPassword.mockResolvedValue("hashedNewPassword");  // Mock password hashing
+    userModel.findOne = jest.fn().mockResolvedValue(mockUser); // User found
+    hashPassword.mockResolvedValue("hashedNewPassword"); // Mock password hashing
 
     await forgotPasswordController(req, res);
 
-    expect(hashPassword).toHaveBeenCalledWith(req.body.newPassword);  // Ensure password hashing is called
-    expect(userModel.findByIdAndUpdate).toHaveBeenCalledWith(mockUser._id, { password: "hashedNewPassword" });
+    expect(hashPassword).toHaveBeenCalledWith(req.body.newPassword); // Ensure password hashing is called
+    expect(userModel.findByIdAndUpdate).toHaveBeenCalledWith(mockUser._id, {
+      password: "hashedNewPassword",
+    });
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.send).toHaveBeenCalledWith({
       success: true,
@@ -294,7 +309,9 @@ describe("Forgot Password Controller Test", () => {
   });
 
   test("should return error if an exception occurs during password reset", async () => {
-    userModel.findOne = jest.fn().mockRejectedValue(new Error("Database Error"));  // Simulate DB error
+    userModel.findOne = jest
+      .fn()
+      .mockRejectedValue(new Error("Database Error")); // Simulate DB error
     await forgotPasswordController(req, res);
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.send).toHaveBeenCalledWith({
@@ -331,7 +348,7 @@ describe("Update Profile Controller Test", () => {
       phone: "1234567890",
       address: "123 Main St",
     };
-    
+
     req.body = {
       name: "John Updated",
       address: "456 New St",
@@ -403,7 +420,7 @@ describe("Update Profile Controller Test", () => {
     userModel.findById = jest.fn().mockResolvedValue(mockUser);
     await updateProfileController(req, res);
     expect(res.send).toHaveBeenCalledWith({
-      error: "Password must be at least 6 characters long"
+      error: "Password must be at least 6 characters long",
     });
     expect(userModel.findByIdAndUpdate).not.toHaveBeenCalled();
   });
@@ -476,17 +493,17 @@ describe("Update Profile Controller Test", () => {
       phone: "1234567890",
       address: "123 Main St",
     };
-    
+
     req.body = {
       email: "existing@example.com",
     };
-    
+
     userModel.findById = jest.fn().mockResolvedValue(mockUser);
     userModel.findOne = jest.fn().mockResolvedValue({ _id: "another-user" }); // email already in use
     await updateProfileController(req, res);
     expect(userModel.findOne).toHaveBeenCalledWith({ email: req.body.email });
     expect(res.send).toHaveBeenCalledWith({
-      error: "Email already in use"
+      error: "Email already in use",
     });
     expect(userModel.findByIdAndUpdate).not.toHaveBeenCalled();
   });
@@ -494,7 +511,7 @@ describe("Update Profile Controller Test", () => {
   test("should handle error during update process", async () => {
     const mockError = new Error("Database error");
     userModel.findById = jest.fn().mockRejectedValue(mockError);
-    const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
+    const consoleLogSpy = jest.spyOn(console, "log").mockImplementation();
     await updateProfileController(req, res);
     expect(consoleLogSpy).toHaveBeenCalledWith(mockError);
     expect(res.status).toHaveBeenCalledWith(400);
@@ -504,5 +521,58 @@ describe("Update Profile Controller Test", () => {
       error: mockError,
     });
     consoleLogSpy.mockRestore();
+  });
+});
+
+describe("All users controller test", () => {
+  let res;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+      send: jest.fn(),
+    };
+  });
+
+  test("should return all users successfully", async () => {
+    const mockedUser = {
+      _id: "1",
+      name: "Daniel",
+      email: "Daniel@gmail.com",
+      phone: "91234567",
+      address: "60 Rochor Road",
+      answer: "Singapore",
+      role: 1,
+    };
+
+    const mockSelect = jest.fn().mockResolvedValue([mockedUser]);
+    userModel.find = jest.fn().mockReturnValue({
+      select: mockSelect,
+    });
+
+    await getAllUsersController({}, res);
+
+    expect(res.json).toHaveBeenCalledWith([mockedUser]);
+  });
+
+  test("should handle database error when retrieving users", async () => {
+    const mockError = new Error("Database error");
+
+    const mockSelect = jest.fn().mockRejectedValue(mockError);
+    userModel.find = jest.fn().mockReturnValue({
+      select: mockSelect,
+    });
+
+    await getAllUsersController({}, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith({
+      success: false,
+      message: "Error Getting All Users",
+      error: mockError,
+    });
   });
 });
