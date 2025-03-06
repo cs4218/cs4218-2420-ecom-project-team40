@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
 import AdminMenu from "../../components/AdminMenu";
 import axios from "axios";
-import { useAuth } from "../../context/auth";
 import toast from "react-hot-toast";
 
 const Users = () => {
@@ -45,7 +44,7 @@ const Users = () => {
                 <tbody>
                   {users.map((user) => {
                     return (
-                      <tr>
+                      <tr key={user._id}>
                         <td>{user.name}</td>
                         <td>{user.email}</td>
                         <td>{user.phone}</td>
