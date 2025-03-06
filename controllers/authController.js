@@ -29,9 +29,9 @@ export const registerController = async (req, res) => {
 
     const phoneRegex = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g;
     if (!phoneRegex.test(phone)) {
-      return res.send({ message: "Invalid phone format"});
+      return res.send({ message: "Invalid phone format" });
     }
-    
+
     if (!address) {
       return res.send({ message: "Address is Required" });
     }
@@ -274,6 +274,21 @@ export const orderStatusController = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Error While Updating Order",
+      error,
+    });
+  }
+};
+
+export const getAllUsersController = async (req, res) => {
+  try {
+    const orders = await userModel.find().select("-password");
+
+    res.json(orders);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error Getting All Users",
       error,
     });
   }
