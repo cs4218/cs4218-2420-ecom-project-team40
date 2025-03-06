@@ -31,6 +31,7 @@ module.exports = {
     "<rootDir>/client/src/pages/Policy.test.js",
     "<rootDir>/client/src/pages/admin/AdminDashboard.test.js",
     "<rootDir>/client/src/components/AdminMenu.test.js",
+    "<rootDir>/client/src/components/UserMenu.test.js",
     "<rootDir>/client/src/pages/user/Profile.test.js"
   ],
 
@@ -50,6 +51,7 @@ module.exports = {
     "client/src/pages/Policy.js",
     "client/src/pages/admin/AdminDashboard.js",
     "client/src/components/AdminMenu.js",
+    "client/src/components/UserMenu.js",
     "client/src/pages/user/Profile.test.js",
   ],
   coverageThreshold: {
