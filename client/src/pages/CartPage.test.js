@@ -1,5 +1,5 @@
 import React from "react";
-import { render, waitFor, screen, getByTestId, fireEvent, act } from "@testing-library/react";
+import { render, waitFor, screen, fireEvent, act } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom/extend-expect";
 import CartPage from "./CartPage";
@@ -7,8 +7,7 @@ import { useAuth } from "../context/auth";
 import { useCart } from "../context/cart";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { mock } from "node:test";
-import { use } from "react";
+import DropIn from "braintree-web-drop-in-react";
 
 // Mocking axios.post
 jest.mock("axios");
@@ -310,6 +309,7 @@ describe("CartPage Component", () => {
       ], 
     );
 
+    //credits to https://stackoverflow.com/questions/56722139/when-testing-code-that-causes-react-state-updates-should-be-wrapped-into-act
     await act(async ()=>{
       render(
         <MemoryRouter>
@@ -342,6 +342,7 @@ describe("CartPage Component", () => {
       ], 
     );
 
+    //credits to https://stackoverflow.com/questions/56722139/when-testing-code-that-causes-react-state-updates-should-be-wrapped-into-act
     await act(async ()=>{
       render(
         <MemoryRouter>
@@ -366,7 +367,7 @@ describe("CartPage Component", () => {
       },
       jest.fn(),
     ]);
-    useCart.mockReturnValue([]); // Empty cart
+    useCart.mockReturnValue([]); 
 
     axios.get.mockResolvedValueOnce({
       data: {
@@ -374,6 +375,7 @@ describe("CartPage Component", () => {
       },
     });
 
+    //credits to https://stackoverflow.com/questions/56722139/when-testing-code-that-causes-react-state-updates-should-be-wrapped-into-act
     await act(async ()=>{
       render(
         <MemoryRouter>
@@ -387,6 +389,7 @@ describe("CartPage Component", () => {
   });
 
   it("should go to payment when conditions are met", async () => {
+    const setCart = jest.fn();
     useAuth.mockReturnValue([
       {
         token : "mockToken",
@@ -401,7 +404,7 @@ describe("CartPage Component", () => {
 
     useCart.mockReturnValue([    
         mockCartData,
-        jest.fn(), 
+        setCart, 
       ], 
     );
 
@@ -417,13 +420,21 @@ describe("CartPage Component", () => {
       },
     });
 
-    await act(async ()=>{
+    DropIn.mockImplementationOnce(({ onInstance }) => {
+      setTimeout(() => {
+        onInstance({
+            requestPaymentMethod: jest.fn().mockResolvedValue({ nonce: "nonce" }),
+        });
+      }, 0); 
+      // credits to https://stackoverflow.com/questions/60526786/react-warning-cannot-update-a-component-from-inside-the-function-body-of-a-diff
+      return <div>mock dropin</div>;
+    });
+
       render(
         <MemoryRouter>
           < CartPage />
         </MemoryRouter>
-      )}
-    );
+      );
 
     await waitFor(() => {
       expect(axios.get).toHaveBeenCalledWith("/api/v1/product/braintree/token");
@@ -432,16 +443,78 @@ describe("CartPage Component", () => {
       expect(screen.getByTestId("dropin")).toBeInTheDocument();
     });
 
-    // expect(screen.getByRole("button", { name: /make payment/i })).toBeInTheDocument();
-    // expect(screen.getByRole("button", { name: /make payment/i })).not.toBeDisabled();
-    // fireEvent.click(screen.getByRole("button", { name: /make payment/i }));
-    // expect(screen.getByRole("button", { name: /make payment/i })).toBeDisabled();
-    // await waitFor(() => { 
-    //   expect(axios.post).toHaveBeenCalledWith("/api/v1/product/braintree/payment", expect.any(Object));
-    // });
-    // expect(localStorage.removeItem).toHaveBeenCalledWith("cart");
-    // expect(mockedUsedNavigate).toHaveBeenCalledWith("/dashboard/user/orders");
-    // expect(toast.success).toHaveBeenCalledWith("Payment Completed Successfully");
+    expect(screen.getByRole("button", { name: /make payment/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /make payment/i })).not.toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: /make payment/i }));
+    await waitFor(() => { 
+      expect(axios.post).toHaveBeenCalledWith("/api/v1/product/braintree/payment", {
+        nonce: "nonce",
+        cart: mockCartData,
+      });
+    });
+    expect(setCart).toHaveBeenCalledWith([]);
+    expect(localStorage.removeItem).toHaveBeenCalledWith("cart");
+    expect(mockedUsedNavigate).toHaveBeenCalledWith("/dashboard/user/orders");
+    expect(toast.success).toHaveBeenCalledWith("Payment Completed Successfully");
+  });
+
+  it("should print error if handlePayment throws an error", async () => {
+    const setCart = jest.fn();
+    useAuth.mockReturnValue([
+      {
+        token : "mockToken",
+        user : {
+          name: "John Doe",
+          email: "test@example.com",
+          address: "NUS Street",
+        },
+      },
+      jest.fn(),
+    ]);
+
+    useCart.mockReturnValue([    
+        mockCartData,
+        setCart, 
+      ], 
+    );
+
+    axios.get.mockResolvedValueOnce({
+      data: {
+        clientToken: "mockClientToken",
+      },
+    });
+
+    axios.post.mockRejectedValueOnce(new Error("Failed to make payment"));
+    const outputSpy = jest.spyOn(console, "log"); // credits to https://stackoverflow.com/questions/49096093/how-do-i-test-a-jest-console-log
+    DropIn.mockImplementationOnce(({ onInstance }) => {
+      setTimeout(() => {
+        onInstance({
+            requestPaymentMethod: jest.fn().mockResolvedValue({ nonce: "nonce" }),
+        });
+      }, 0); 
+      // credits to https://stackoverflow.com/questions/60526786/react-warning-cannot-update-a-component-from-inside-the-function-body-of-a-diff
+      return <div>mock dropin</div>;
+    });
+
+      render(
+        <MemoryRouter>
+          < CartPage />
+        </MemoryRouter>
+      );
+
+    await waitFor(() => {
+      expect(axios.get).toHaveBeenCalledWith("/api/v1/product/braintree/token");
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId("dropin")).toBeInTheDocument();
+    });
+
+    expect(screen.getByRole("button", { name: /make payment/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /make payment/i })).not.toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: /make payment/i }));
+    await waitFor(() => { 
+      expect(outputSpy).toHaveBeenCalledWith(expect.any(Error));
+    });
   });
 });
 
