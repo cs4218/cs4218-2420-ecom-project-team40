@@ -19,18 +19,14 @@ const CartPage = () => {
 
   //total price
   const totalPrice = () => {
-    try {
-      let total = 0;
-      cart?.forEach((item) => {
-        total = total + item.price;
-      });
-      return total.toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD",
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    let total = 0;
+    cart?.forEach((item) => {
+      total = total + item.price;
+    });
+    return total.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
   };
   //delete item
   const removeCartItem = (pid) => {
@@ -48,8 +44,12 @@ const CartPage = () => {
   //get payment gateway token
   const getToken = async () => {
     try {
-      const { data } = await axios.get("/api/v1/product/braintree/token");
-      setClientToken(data?.clientToken);
+      const res = await axios.get("/api/v1/product/braintree/token");
+      if (res && res.data && res.data.clientToken) {
+        setClientToken(res.data.clientToken);
+      } else {
+        console.log("Something is wrong with the API response message");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -88,10 +88,10 @@ const CartPage = () => {
                 : `Hello  ${auth?.token && auth?.user?.name}`}
               <p className="text-center">
                 {cart?.length
-                  ? `You Have ${cart.length} items in your cart ${
-                      auth?.token ? "" : "please login to checkout!"
+                  ? `You have ${cart.length} items in your cart ${
+                      auth?.token ? "" : "Please login to checkout!"
                     }`
-                  : " Your Cart Is Empty"}
+                  : " Your cart is empty"}
               </p>
             </h1>
           </div>
@@ -130,7 +130,7 @@ const CartPage = () => {
               <h2>Cart Summary</h2>
               <p>Total | Checkout | Payment</p>
               <hr />
-              <h4>Total : {totalPrice()} </h4>
+              <h4 data-testid="total-price">Total : {totalPrice()} </h4>
               {auth?.user?.address ? (
                 <>
                   <div className="mb-3">
@@ -172,7 +172,7 @@ const CartPage = () => {
                   ""
                 ) : (
                   <>
-                    <DropIn
+                    <DropIn data-testid="dropin"
                       options={{
                         authorization: clientToken,
                         paypal: {
@@ -187,7 +187,8 @@ const CartPage = () => {
                       onClick={handlePayment}
                       disabled={loading || !instance || !auth?.user?.address}
                     >
-                      {loading ? "Processing ...." : "Make Payment"}
+                      {/* {loading ? "Processing ...." : "Make Payment"} */}
+                      {loading ? "Processing ...." : (!instance ? "no instance": (!auth?.user?.address ? "no address" : "Make Payments"))}
                     </button>
                   </>
                 )}
