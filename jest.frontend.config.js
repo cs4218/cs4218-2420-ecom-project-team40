@@ -35,6 +35,9 @@ module.exports = {
     "<rootDir>/client/src/components/UserMenu.test.js",
     "<rootDir>/client/src/pages/user/Profile.test.js",
     "<rootDir>/client/src/pages/admin/Users.test.js",
+    "<rootDir>/client/src/pages/admin/Products.test.js",
+    "<rootDir>/client/src/pages/admin/CreateProduct.test.js",
+    "<rootDir>/client/src/pages/admin/UpdateProduct.test.js",
   ],
 
   // jest code coverage
@@ -57,6 +60,9 @@ module.exports = {
     "client/src/components/UserMenu.js",
     "client/src/pages/user/Profile.test.js",
     "client/src/pages/admin/Users.js",
+    "client/src/pages/admin/Products.js",
+    "client/src/pages/admin/CreateProduct.js",
+    "client/src/pages/admin/UpdateProduct.js",
   ],
   coverageThreshold: {
     global: {

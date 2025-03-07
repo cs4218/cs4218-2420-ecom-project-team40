@@ -59,9 +59,9 @@ const CreateProduct = () => {
       setShowEmptyPhotoMsg(false);
     }
 
-    if (!category || !shipping || !photo) {
-      return;
-    }
+    // if (!category || !shipping || !photo) {
+    //   return;
+    // }
 
     try {
       const productData = new FormData();
@@ -84,7 +84,7 @@ const CreateProduct = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("something went wrong");
+      toast.error("something went wrong creating product");
     }
   };
 
@@ -97,14 +97,15 @@ const CreateProduct = () => {
           </div>
           <div className="col-md-9">
             <h1>Create Product</h1>
-            <form onSubmit={handleCreate} className="m-1 w-75">
+            <div className="m-1 w-75">
               <div className="mb-3">
                 <Select
+                  variant="borderless"
                   placeholder="Select a category"
                   size="large"
                   showSearch
                   className="form-select"
-                  status="error"
+                  status={showCategoryReqMsg ? "error" : ""}
                   onChange={(value) => {
                     setCategory(value);
                   }}
@@ -114,8 +115,13 @@ const CreateProduct = () => {
                       {c.name}
                     </Option>
                   ))}
-                </Select>{" "}
-                <label hidden={!showCategoryReqMsg} className="text-danger">
+                </Select>
+
+                <label
+                  data-testid="category-req"
+                  hidden={!showCategoryReqMsg}
+                  className="text-danger"
+                >
                   Category is required
                 </label>
               </div>
@@ -190,12 +196,13 @@ const CreateProduct = () => {
               </div>
               <div className="mb-3">
                 <Select
+                  variant="borderless"
                   placeholder="Select Shipping"
                   size="large"
                   showSearch
                   className="form-select"
                   onChange={(value) => setShipping(value)}
-                  status="error"
+                  status={showShippingReqMsg ? "error" : ""}
                 >
                   <Option value="0">No</Option>
                   <Option value="1">Yes</Option>
@@ -205,11 +212,15 @@ const CreateProduct = () => {
                 </label>
               </div>
               <div className="mb-3">
-                <button className="btn btn-primary" type="submit">
+                <button
+                  data-testid="create-button"
+                  className="btn btn-primary"
+                  onClick={handleCreate}
+                >
                   CREATE PRODUCT
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
