@@ -21,7 +21,7 @@ const CartPage = () => {
   const totalPrice = () => {
     try {
       let total = 0;
-      cart?.map((item) => {
+      cart?.forEach((item) => {
         total = total + item.price;
       });
       return total.toLocaleString("en-US", {
@@ -32,7 +32,7 @@ const CartPage = () => {
       console.log(error);
     }
   };
-  //detele item
+  //delete item
   const removeCartItem = (pid) => {
     try {
       let myCart = [...cart];
@@ -71,7 +71,7 @@ const CartPage = () => {
       localStorage.removeItem("cart");
       setCart([]);
       navigate("/dashboard/user/orders");
-      toast.success("Payment Completed Successfully ");
+      toast.success("Payment Completed Successfully");
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -89,7 +89,7 @@ const CartPage = () => {
               <p className="text-center">
                 {cart?.length
                   ? `You Have ${cart.length} items in your cart ${
-                      auth?.token ? "" : "please login to checkout !"
+                      auth?.token ? "" : "please login to checkout!"
                     }`
                   : " Your Cart Is Empty"}
               </p>
@@ -162,7 +162,7 @@ const CartPage = () => {
                         })
                       }
                     >
-                      Plase Login to checkout
+                      Please Login to checkout
                     </button>
                   )}
                 </div>
