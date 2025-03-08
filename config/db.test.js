@@ -21,7 +21,7 @@ describe('Database Connection', () => {
 
         expect(mongoose.connect).toHaveBeenCalledWith(process.env.MONGO_URL);
         expect(console.log).toHaveBeenCalledWith(
-            expect.stringContaining('Connected To db')
+            expect.stringContaining('Connected To Mongodb Database test-host')
         );
     });
 
@@ -32,7 +32,7 @@ describe('Database Connection', () => {
 
         expect(mongoose.connect).toHaveBeenCalledWith(process.env.MONGO_URL);
         expect(console.log).toHaveBeenCalledWith(
-            expect.stringContaining('Error in db connection: Connection failed')
+            expect.stringContaining('Error in Mongodb Error: Connection failed')
         );
     });
 }); 
