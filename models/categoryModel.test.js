@@ -1,24 +1,53 @@
-import { mock } from "jest-mock-extended";
+import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
 import categoryModel from "../models/categoryModel.js";
 
-jest.mock("../models/categoryModel.js");
+let mongoServer;
 
-describe("Mocked Category Model Test", () => {
-  test("should call save method when creating a new category", async () => {
-    const mockCategory = mock();
-    categoryModel.prototype.save = jest.fn().mockResolvedValue(mockCategory);
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  await mongoose.connect(mongoServer.getUri());
+});
 
-    const newCategory = new categoryModel({ name: "Books", slug: "books" });
-    await newCategory.save();
+afterAll(async () => {
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
 
-    expect(newCategory.save).toHaveBeenCalled();
+beforeEach(async () => {
+  await categoryModel.deleteMany(); // Clear categories before each test
+});
+
+describe("Category Model Test with In-Memory Database", () => {
+  test("should save a category with a name and slug", async () => {
+    const newCategory = new categoryModel({
+      name: "Electronics",
+      slug: "electronics",
+    });
+
+    const savedCategory = await newCategory.save();
+
+    expect(savedCategory._id).toBeDefined();
+    expect(savedCategory.name).toBe("Electronics");
+    expect(savedCategory.slug).toBe("electronics");
   });
 
-//   test("should fail to create a category if name is missing", async () => {
-//     categoryModel.prototype.save = jest.fn().mockRejectedValue(new Error("Name is required"));
+  test("should fail to save a category if name is missing", async () => {
+    const categoryWithoutName = new categoryModel({
+      slug: "missing-name",
+    });
 
-//     const newCategory = new categoryModel({ slug: "missing-name" });
+    await expect(categoryWithoutName.save()).rejects.toThrow();
+  });
 
-//     await expect(newCategory.save()).rejects.toThrow("Name is required");
-//   });
+  test("should ensure slug is stored in lowercase", async () => {
+    const category = new categoryModel({
+      name: "Fashion",
+      slug: "FASHION",
+    });
+
+    const savedCategory = await category.save();
+
+    expect(savedCategory.slug).toBe("fashion"); // Should be converted to lowercase
+  });
 });

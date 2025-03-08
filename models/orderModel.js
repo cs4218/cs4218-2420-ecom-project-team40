@@ -6,6 +6,7 @@ const orderSchema = new mongoose.Schema(
       {
         type: mongoose.ObjectId,
         ref: "Products",
+        required: true
       },
     ],
     payment: {},
@@ -21,5 +22,9 @@ const orderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+orderSchema.path("products").validate(function (value) {
+  return value.length > 0; // Ensure at least one product
+}, "Order must contain at least one product.");
 
 export default mongoose.model("Order", orderSchema);
