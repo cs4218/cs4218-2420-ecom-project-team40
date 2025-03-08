@@ -17,6 +17,9 @@ const CreateProduct = () => {
   const [quantity, setQuantity] = useState("");
   const [shipping, setShipping] = useState("");
   const [photo, setPhoto] = useState("");
+  const [showEmptyPhotoMsg, setShowEmptyPhotoMsg] = useState(false);
+  const [showCategoryReqMsg, setShowCategoryReqMsg] = useState(false);
+  const [showShippingReqMsg, setShowShippingReqMsg] = useState(false);
 
   //get all category
   const getAllCategory = async () => {
@@ -27,7 +30,7 @@ const CreateProduct = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Something wwent wrong in getting catgeory");
+      toast.error("Something went wrong in getting category");
     }
   };
 
@@ -38,6 +41,28 @@ const CreateProduct = () => {
   //create product function
   const handleCreate = async (e) => {
     e.preventDefault();
+    if (!category) {
+      setShowCategoryReqMsg(true);
+    } else {
+      setShowCategoryReqMsg(false);
+    }
+
+    if (!shipping) {
+      setShowShippingReqMsg(true);
+    } else {
+      setShowShippingReqMsg(false);
+    }
+
+    if (!photo) {
+      setShowEmptyPhotoMsg(true);
+    } else {
+      setShowEmptyPhotoMsg(false);
+    }
+
+    // if (!category || !shipping || !photo) {
+    //   return;
+    // }
+
     try {
       const productData = new FormData();
       productData.append("name", name);
@@ -46,19 +71,20 @@ const CreateProduct = () => {
       productData.append("quantity", quantity);
       productData.append("photo", photo);
       productData.append("category", category);
-      const { data } = axios.post(
+      productData.append("shipping", shipping === "Yes" ? true : false);
+      const { data } = await axios.post(
         "/api/v1/product/create-product",
         productData
       );
       if (data?.success) {
-        toast.error(data?.message);
-      } else {
         toast.success("Product Created Successfully");
         navigate("/dashboard/admin/products");
+      } else {
+        toast.error(data?.message);
       }
     } catch (error) {
       console.log(error);
-      toast.error("something went wrong");
+      toast.error("something went wrong creating product");
     }
   };
 
@@ -72,22 +98,34 @@ const CreateProduct = () => {
           <div className="col-md-9">
             <h1>Create Product</h1>
             <div className="m-1 w-75">
-              <Select
-                bordered={false}
-                placeholder="Select a category"
-                size="large"
-                showSearch
-                className="form-select mb-3"
-                onChange={(value) => {
-                  setCategory(value);
-                }}
-              >
-                {categories?.map((c) => (
-                  <Option key={c._id} value={c._id}>
-                    {c.name}
-                  </Option>
-                ))}
-              </Select>
+              <div className="mb-3">
+                <Select
+                  variant="borderless"
+                  placeholder="Select a category"
+                  size="large"
+                  showSearch
+                  className="form-select"
+                  status={showCategoryReqMsg ? "error" : ""}
+                  onChange={(value) => {
+                    setCategory(value);
+                  }}
+                >
+                  {categories?.map((c) => (
+                    <Option key={c._id} value={c._id}>
+                      {c.name}
+                    </Option>
+                  ))}
+                </Select>
+
+                <label
+                  data-testid="category-req"
+                  hidden={!showCategoryReqMsg}
+                  className="text-danger"
+                >
+                  Category is required
+                </label>
+              </div>
+
               <div className="mb-3">
                 <label className="btn btn-outline-secondary col-md-12">
                   {photo ? photo.name : "Upload Photo"}
@@ -98,6 +136,9 @@ const CreateProduct = () => {
                     onChange={(e) => setPhoto(e.target.files[0])}
                     hidden
                   />
+                </label>
+                <label hidden={!showEmptyPhotoMsg} className="text-danger">
+                  Photo upload is required
                 </label>
               </div>
               <div className="mb-3">
@@ -116,18 +157,20 @@ const CreateProduct = () => {
                 <input
                   type="text"
                   value={name}
-                  placeholder="write a name"
+                  placeholder="Write a name"
                   className="form-control"
                   onChange={(e) => setName(e.target.value)}
+                  required
                 />
               </div>
               <div className="mb-3">
                 <textarea
                   type="text"
                   value={description}
-                  placeholder="write a description"
+                  placeholder="Write a description"
                   className="form-control"
                   onChange={(e) => setDescription(e.target.value)}
+                  required
                 />
               </div>
 
@@ -135,37 +178,45 @@ const CreateProduct = () => {
                 <input
                   type="number"
                   value={price}
-                  placeholder="write a Price"
+                  placeholder="Write a price"
                   className="form-control"
                   onChange={(e) => setPrice(e.target.value)}
+                  required
                 />
               </div>
               <div className="mb-3">
                 <input
                   type="number"
                   value={quantity}
-                  placeholder="write a quantity"
+                  placeholder="Write a quantity"
                   className="form-control"
                   onChange={(e) => setQuantity(e.target.value)}
+                  required
                 />
               </div>
               <div className="mb-3">
                 <Select
-                  bordered={false}
-                  placeholder="Select Shipping "
+                  variant="borderless"
+                  placeholder="Select Shipping"
                   size="large"
                   showSearch
-                  className="form-select mb-3"
-                  onChange={(value) => {
-                    setShipping(value);
-                  }}
+                  className="form-select"
+                  onChange={(value) => setShipping(value)}
+                  status={showShippingReqMsg ? "error" : ""}
                 >
                   <Option value="0">No</Option>
                   <Option value="1">Yes</Option>
                 </Select>
+                <label hidden={!showShippingReqMsg} className="text-danger">
+                  Shipping is required
+                </label>
               </div>
               <div className="mb-3">
-                <button className="btn btn-primary" onClick={handleCreate}>
+                <button
+                  data-testid="create-button"
+                  className="btn btn-primary"
+                  onClick={handleCreate}
+                >
                   CREATE PRODUCT
                 </button>
               </div>
