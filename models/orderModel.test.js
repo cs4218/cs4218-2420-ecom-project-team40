@@ -1,67 +1,58 @@
+import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
 import orderModel from "../models/orderModel.js";
 
-jest.mock("../models/orderModel.js"); // Mocking the Order model
+let mongoServer;
 
-describe("Mocked Order Model Test", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  await mongoose.connect(mongoServer.getUri());
+});
 
-  test("should call save method when creating a new order", async () => {
-    // Mock the save method
-    orderModel.prototype.save = jest.fn().mockResolvedValue({
-      products: ["productId1", "productId2"],
-      payment: { status: "paid", amount: 100 },
-      buyer: "buyerId123",
-      status: "Processing",
-    });
+afterAll(async () => {
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
 
-    // Create a new order
+beforeEach(async () => {
+  await orderModel.deleteMany(); // Clear orders before each test
+});
+
+describe("Order Model Test with In-Memory Database", () => {
+  test("should save an order with default status", async () => {
     const newOrder = new orderModel({
-      products: ["productId1", "productId2"],
-      payment: { status: "paid", amount: 100 },
-      buyer: "buyerId123",
-      status: "Processing",
+      products: [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()],
+      payment: { status: "Paid", amount: 250 },
+      buyer: new mongoose.Types.ObjectId(),
     });
 
-    await newOrder.save();
+    const savedOrder = await newOrder.save();
 
-    expect(newOrder.save).toHaveBeenCalled();
+    expect(savedOrder._id).toBeDefined();
+    expect(savedOrder.status).toBe("Not Process"); // Default status
   });
 
-  test("should fail to create an order if no products are included", async () => {
-    orderModel.prototype.save = jest
-      .fn()
-      .mockRejectedValue(new Error("Products are required"));
-
-    const newOrder = new orderModel({
-      payment: { status: "paid", amount: 100 },
-      buyer: "buyerId123",
-      status: "Processing",
+  test("should fail to save an order if products are missing", async () => {
+    const orderWithoutProducts = new orderModel({
+      payment: { status: "Paid", amount: 100 },
+      buyer: new mongoose.Types.ObjectId(),
     });
 
-    await expect(newOrder.save()).rejects.toThrow("Products are required");
+    await expect(orderWithoutProducts.save()).rejects.toThrow();
   });
 
-  test("should default to 'Not Process' status if not provided", async () => {
-    // Mock save method to return an object with the default status
-    orderModel.prototype.save = jest.fn().mockResolvedValue({
-      products: ["productId1"],
-      payment: { status: "paid", amount: 50 },
-      buyer: "buyerId123",
-      status: "Not Process", // Default value
+  test("should allow updating order status", async () => {
+    const order = new orderModel({
+      products: [new mongoose.Types.ObjectId()],
+      payment: { status: "Paid", amount: 100 },
+      buyer: new mongoose.Types.ObjectId(),
     });
-  
-    const newOrder = new orderModel({
-      products: ["productId1"],
-      payment: { status: "paid", amount: 50 },
-      buyer: "buyerId123",
-    });
-  
-    const savedOrder = await newOrder.save(); // Get the resolved object from the mock
-  
-    expect(newOrder.save).toHaveBeenCalled();
-    expect(savedOrder.status).toBe("Not Process"); // Check against the returned object
+
+    const savedOrder = await order.save();
+    
+    savedOrder.status = "Processing";
+    const updatedOrder = await savedOrder.save();
+
+    expect(updatedOrder.status).toBe("Processing");
   });
-  
 });
