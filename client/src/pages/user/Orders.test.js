@@ -70,9 +70,9 @@ describe("Orders Component", () => {
       expect(screen.getByText("John Doe")).toBeInTheDocument();
       expect(screen.getByText("Not Process")).toBeInTheDocument();
       expect(screen.getByText("Product 1")).toBeInTheDocument();
-			expect(screen.getByText("Success")).toBeInTheDocument();
-
-			expect(screen.getByText("Product 2")).toBeInTheDocument();
+      expect(screen.getByText("Success")).toBeInTheDocument();
+      
+      expect(screen.getByText("Product 2")).toBeInTheDocument();
     });
   });
 
@@ -134,7 +134,7 @@ describe("Orders Component", () => {
     });
   });
 
-	it("should not render page if user is not authenticated", async () => {
+  it("should not render page if user is not authenticated", async () => {
     useAuth.mockReturnValue([{ token: null }, jest.fn()]); 
 
     render(
@@ -144,15 +144,15 @@ describe("Orders Component", () => {
     );
     
     await waitFor(() => {
-			expect(axios.get).not.toHaveBeenCalledWith();
-		});
+      expect(axios.get).not.toHaveBeenCalledWith();
+    });
   });
 
 	it("should print error if the api call fails", async () => {
 		useAuth.mockReturnValue([{ token: "mockToken" }, jest.fn()]);
     axios.get.mockRejectedValue(new Error("API failure"));
     
-		const outputSpy = jest.spyOn(console, "log"); // credits to https://stackoverflow.com/questions/49096093/how-do-i-test-a-jest-console-log
+    const outputSpy = jest.spyOn(console, "log"); // credits to https://stackoverflow.com/questions/49096093/how-do-i-test-a-jest-console-log
 
     render(
       <MemoryRouter>
@@ -161,9 +161,9 @@ describe("Orders Component", () => {
     );
     
     await waitFor(() => {
-			expect(outputSpy).toHaveBeenCalledWith(expect.any(Error));
-		});
+      expect(outputSpy).toHaveBeenCalledWith(expect.any(Error));
+    });
 
-		outputSpy.mockRestore();
+    outputSpy.mockRestore();
   });
 });
