@@ -35,7 +35,7 @@ describe("Dashboard Component", () => {
 		jest.clearAllMocks();
 	});
 
-	it("should render user dashboard when user is authenticated", () => {
+  it("should render user dashboard when user is authenticated", () => {
     useAuth.mockReturnValue([
       {
         token : "mockToken",

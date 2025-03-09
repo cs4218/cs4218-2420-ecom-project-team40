@@ -36,7 +36,7 @@ describe("Orders Component", () => {
 		jest.clearAllMocks();
 	});
 
-	it("should render present orders when user is authenticated", async () => {
+  it("should render present orders when user is authenticated", async () => {
     useAuth.mockReturnValue([{ token: "mockToken" }, jest.fn()]);
     
     const mockOrders = [
@@ -48,7 +48,7 @@ describe("Orders Component", () => {
         payment: { success: true },
         products: [
           { _id: "p1", name: "Product 1", description: "Test Product 1", price: 100 },
-					{ _id: "p2", name: "Product 2", description: "Test Product 2", price: 200 },
+          { _id: "p2", name: "Product 2", description: "Test Product 2", price: 200 },
         ]
       }
     ];
@@ -61,9 +61,9 @@ describe("Orders Component", () => {
       </MemoryRouter>
     );
     
-		await waitFor(() => {
-			expect(axios.get).toHaveBeenCalledWith("/api/v1/auth/orders");
-		});
+    await waitFor(() => {
+      expect(axios.get).toHaveBeenCalledWith("/api/v1/auth/orders");
+    });
 
     await waitFor(() => {
       expect(screen.getByText("All Orders")).toBeInTheDocument();
@@ -76,7 +76,7 @@ describe("Orders Component", () => {
     });
   });
 
-	it("should render order as failed when user payment has failed, when user is authenticated", async () => {
+  it("should render order as failed when user payment has failed, when user is authenticated", async () => {
     useAuth.mockReturnValue([{ token: "mockToken" }, jest.fn()]);
     
     const mockOrders = [
@@ -88,7 +88,7 @@ describe("Orders Component", () => {
         payment: { success: false },
         products: [
           { _id: "p1", name: "Product 1", description: "Test Product 1", price: 100 },
-					{ _id: "p2", name: "Product 2", description: "Test Product 2", price: 200 },
+          { _id: "p2", name: "Product 2", description: "Test Product 2", price: 200 },
         ]
       }
     ];
@@ -101,23 +101,22 @@ describe("Orders Component", () => {
       </MemoryRouter>
     );
     
-		await waitFor(() => {
-			expect(axios.get).toHaveBeenCalledWith("/api/v1/auth/orders");
-		});
+    await waitFor(() => {
+      expect(axios.get).toHaveBeenCalledWith("/api/v1/auth/orders");
+    });
 
     await waitFor(() => {
       expect(screen.getByText("All Orders")).toBeInTheDocument();
       expect(screen.getByText("John Doe")).toBeInTheDocument();
       expect(screen.getByText("Not Process")).toBeInTheDocument();
       expect(screen.getByText("Product 1")).toBeInTheDocument();
-			expect(screen.getByText("Failed")).toBeInTheDocument();
-
-			expect(screen.getByText("Product 2")).toBeInTheDocument();
+      expect(screen.getByText("Failed")).toBeInTheDocument();
+      expect(screen.getByText("Product 2")).toBeInTheDocument();
     });
   });
 
 
-	it("should be an empty page if there are not past orders when user is authenticated", async () => {
+  it("should be an empty page if there are not past orders when user is authenticated", async () => {
     useAuth.mockReturnValue([{ token: "mockToken" }, jest.fn()]);
     
     const mockOrders = [];
