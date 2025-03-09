@@ -32,9 +32,9 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe("Orders Component", () => {
-	beforeEach(() => {
-		jest.clearAllMocks();
-	});
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   it("should render present orders when user is authenticated", async () => {
     useAuth.mockReturnValue([{ token: "mockToken" }, jest.fn()]);
@@ -148,8 +148,8 @@ describe("Orders Component", () => {
     });
   });
 
-	it("should print error if the api call fails", async () => {
-		useAuth.mockReturnValue([{ token: "mockToken" }, jest.fn()]);
+  it("should print error if the api call fails", async () => {
+    useAuth.mockReturnValue([{ token: "mockToken" }, jest.fn()]);
     axios.get.mockRejectedValue(new Error("API failure"));
     
     const outputSpy = jest.spyOn(console, "log"); // credits to https://stackoverflow.com/questions/49096093/how-do-i-test-a-jest-console-log
