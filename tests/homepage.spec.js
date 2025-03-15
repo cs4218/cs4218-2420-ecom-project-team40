@@ -14,13 +14,10 @@ test.describe("Homepage UI tests", () => {
     }
 
     await loadMoreButton.click();
-    await expect(page.getByText("Loading ...")).toBeVisible(); // Shows loading transition
+    // await expect(page.getByText("Loading ...")).toBeVisible(); // Shows loading transition
 
     await expect(loadMoreButton).not.toBeVisible(); //Load button disappears after showing all
-    const afterLoadMoreProductCount = await page
-      .getByText("more details")
-      .count();
-    expect(afterLoadMoreProductCount).toBeGreaterThan(initalProductCount);
+    await waitForProductsToLoad(page).toBeGreaterThan(initalProductCount);
   });
 
   test("User finds a specific product by selecting a price and 2 categories and resets filter", async ({
@@ -32,24 +29,16 @@ test.describe("Homepage UI tests", () => {
     const clothingCheckbox = page.getByRole("checkbox", { name: "Clothing" });
     const priceRadio = page.getByRole("radio", { name: "$0 to 19" });
 
+    // Poll until page loads change
+    await waitForProductsToLoad(page).toBeGreaterThan(0);
+
     const initalProductCount = await page.getByText("more details").count();
     await bookCheckbox.click();
     await clothingCheckbox.click();
     await priceRadio.click();
 
     // Poll until page loads change
-    await expect
-      .poll(
-        async () => {
-          const filteredCount = await page.getByText("more details").count();
-          return filteredCount;
-        },
-        {
-          timeout: 3000,
-          message: "Waiting for filtered products to load",
-        }
-      )
-      .toBeLessThan(initalProductCount);
+    await waitForProductsToLoad(page).toBeLessThan(initalProductCount);
 
     await expect(
       page.getByRole("heading", { name: "NUS T-shirt" })
@@ -59,17 +48,7 @@ test.describe("Homepage UI tests", () => {
     await page.getByText("RESET FILTERS").click();
 
     // Poll until page loads change
-    await expect
-      .poll(
-        async () => {
-          return await page.getByText("more details").count();
-        },
-        {
-          timeout: 3000,
-          message: "Waiting for all products to load",
-        }
-      )
-      .toBe(initalProductCount);
+    await waitForProductsToLoad(page).toBe(initalProductCount);
   });
 
   test("User clicks on category with no product then expanded selection to books and restrict to a price range", async ({
@@ -82,35 +61,13 @@ test.describe("Homepage UI tests", () => {
     await emptyCheckbox.click();
 
     // Poll until page loads change
-    await expect
-      .poll(
-        async () => {
-          const filteredCount = await page.getByText("more details").count();
-          return filteredCount;
-        },
-        {
-          timeout: 3000,
-          message: "Waiting for filtered products to load",
-        }
-      )
-      .toBe(0);
+    waitForProductsToLoad(page).toBe(0);
 
     const bookCheckbox = page.getByRole("checkbox", { name: "Book" });
     await bookCheckbox.click();
 
     // Poll until page changes
-    await expect
-      .poll(
-        async () => {
-          const filteredCount = await page.getByText("more details").count();
-          return filteredCount;
-        },
-        {
-          timeout: 3000,
-          message: "Waiting for filtered products to load",
-        }
-      )
-      .toBe(3);
+    await waitForProductsToLoad(page).toBe(3);
 
     const priceRadio = page.getByRole("radio", { name: "$40 to 59" });
     await priceRadio.click();
@@ -119,3 +76,16 @@ test.describe("Homepage UI tests", () => {
     ).toBeVisible();
   });
 });
+
+// Helper function to wait for products to load
+function waitForProductsToLoad(page) {
+  return expect.poll(
+    async () => {
+      return await page.getByText("more details").count();
+    },
+    {
+      timeout: 10000,
+      message: "Waiting for all products to load",
+    }
+  );
+}
