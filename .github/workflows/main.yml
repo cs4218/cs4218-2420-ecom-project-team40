@@ -32,5 +32,8 @@ jobs:
           cd client
           npm install
 
+      - name: Run services
+        run: npm run dev
+
       - name: Run Jest Tests
         run: npm test
