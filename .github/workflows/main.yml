@@ -38,6 +38,9 @@ jobs:
       - name: Wait for dev server
         run: npx wait-on http://localhost:3000
         
-      - name: Run All Tests
-        run: npm run test:unit && npx playwright test
-      
+      - name: Run Unit Tests
+        run: npm run test:unit
+
+      - name: Run Playwright tests
+        run: |
+          npx playwright test
