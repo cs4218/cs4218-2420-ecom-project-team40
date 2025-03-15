@@ -25,7 +25,7 @@ jobs:
         run: npm install
 
       - name: Install playwright
-        run: npx playwright install
+        run: npx playwright install-deps & npx playwright install
 
       - name: Install client dependencies
         run: |
@@ -33,7 +33,7 @@ jobs:
           npm install
 
       - name: Start dev server
-        run: npm run dev
+        run: npm run dev &
         
       - name: Wait for dev server
         run: npx wait-on http://localhost:3000
