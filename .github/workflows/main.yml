@@ -32,8 +32,11 @@ jobs:
           cd client
           npm install
 
-      - name: Run services
+      - name: Start dev server
         run: npm run dev
-
+        
+      - name: Wait for dev server
+        run: npx wait-on http://localhost:3000
+        
       - name: Run Jest Tests
         run: npm test
