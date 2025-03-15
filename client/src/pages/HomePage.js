@@ -86,12 +86,14 @@ const HomePage = () => {
     }
     setChecked(all);
   };
-  useEffect(() => {
-    if (!checked.length || !radio.length) getAllProducts();
-  }, [checked.length, radio.length]);
 
+  // Combined both filter product and get all prodcuts use effect to prevent race condition
   useEffect(() => {
-    if (checked.length || radio.length) filterProduct();
+    if (checked.length || radio.length) {
+      filterProduct();
+    } else {
+      getAllProducts();
+    }
   }, [checked, radio]);
 
   //get filterd product
