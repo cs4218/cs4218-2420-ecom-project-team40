@@ -24,10 +24,23 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install playwright
+        run: npx playwright install-deps & npx playwright install
+
       - name: Install client dependencies
         run: |
           cd client
           npm install
 
+      - name: Start dev server
+        run: npm run dev &
+        
+      - name: Wait for dev server
+        run: npx wait-on http://localhost:3000
+        
       - name: Run Jest Tests
-        run: npm test
+        run: npm run test:unit
+
+      - name: Run Integration Tests
+        run: npx playwright test
+      
