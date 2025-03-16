@@ -25,6 +25,7 @@ const AdminOrders = () => {
       setOrders(data);
     } catch (error) {
       console.log(error);
+      toast.error("Something Went Wrong Getting Orders");
     }
   };
 
@@ -40,6 +41,7 @@ const AdminOrders = () => {
       getOrders();
     } catch (error) {
       console.log(error);
+      toast.error("Something Went Wrong Updating Orders");
     }
   };
   return (
