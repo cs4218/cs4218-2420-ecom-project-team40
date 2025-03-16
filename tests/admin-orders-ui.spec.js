@@ -36,6 +36,7 @@ test.describe("Admin manage order flow", () => {
     // Reset first order to not process yet
     await page.locator(".ant-select-selection-item").first().click();
     await page.locator(".ant-select-item").first().click();
+    await page.reload(); // load the items again for selector to select based on appearance order
   });
 
   // Assumes that one order is in not process status
