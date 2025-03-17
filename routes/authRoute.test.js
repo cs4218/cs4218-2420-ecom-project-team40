@@ -95,14 +95,14 @@ describe('Auth Routes Integration Tests', () => {
   });
 
   describe('POST /api/v1/auth/login', () => {
-
+    let uniqueEmail = `${Date.now()}@gmail.com`
     beforeEach(async () => {
       // Register a user to test login functionality
       await request(app)
         .post('/api/v1/auth/register')
         .send({
             name: 'John Doe',
-            email: 'valid-test@example.com',
+            email: uniqueEmail,
             password: 'passwordtest',
             phone: '33333333',
             address: 'Test street',
@@ -114,7 +114,7 @@ describe('Auth Routes Integration Tests', () => {
       const res = await request(app)
         .post('/api/v1/auth/login')
         .send({
-          email: 'valid-test@example.com',
+          email: uniqueEmail,
           password: 'passwordtest',
         });
 
@@ -167,4 +167,57 @@ describe('Auth Routes Integration Tests', () => {
       expect(res.body.message).toBe("Email and password are required");
     });
   });
+
+  describe('POST /api/v1/auth/forgot-password', () => {
+    let uniqueEmail = `${Date.now()}@gmail.com`
+    const user = {
+      name: 'John Doe',
+      email: uniqueEmail,
+      password: 'passwordtest',
+      phone: '33333333',
+      address: 'Test street',
+      answer: 'Valid Answer'
+    }
+    const newPassword = "newPassword";
+    beforeEach(async () => {
+      await request(app)
+        .post('/api/v1/auth/register')
+        .send(user);
+    });
+
+    test('should reset password successfully', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/forgot-password')
+        .send({
+          email: user.email,
+          answer: user.answer,
+          newPassword: newPassword
+        })
+
+      expect(res.status).toBe(200);
+      expect(res.body.message).toBe("Password Reset Successfully");
+
+      const check = await request(app)
+        .post('/api/v1/auth/login')
+        .send({
+          email: user.email,
+          password: newPassword,
+        });
+      expect(check.status).toBe(200);
+      expect(check.body.message).toBe("login successfully");
+    })
+
+    test('should return 404 if user is not found', async () => {
+      const res = await request(app)
+        .post('/api/v1/auth/forgot-password')
+        .send({
+          email: "notanemail",
+          answer: user.answer,
+          newPassword: newPassword,
+        })
+
+      expect(res.status).toBe(404);
+      expect(res.body.message).toBe("Wrong Email Or Answer");
+    })
+  })
 });
