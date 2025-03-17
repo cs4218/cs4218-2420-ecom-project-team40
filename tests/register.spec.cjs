@@ -92,4 +92,31 @@ test.describe('Register Page Tests', () => {
     }
   });
 
+  test('should not register if there is no email', async ({ page }) => {
+    // add user first
+    let uniqueUser = `${Date.now()} user`;
+
+    await page.fill('input#exampleInputName1', uniqueUser);
+    // do not add an email
+    // await page.fill('input#exampleInputEmail1', 'alreadyregistered@gmail.com'); 
+    await page.fill('input#exampleInputPassword1', 'testPassword');
+    await page.fill('input#exampleInputPhone1', '33333333');
+    await page.fill('input#exampleInputaddress1', 'NUS SoC, Singapore');
+    await page.fill('input#exampleInputDOB1', '2025-01-01');
+    await page.fill('input#exampleInputanswer1', 'Test');
+
+    await page.click('button:has-text("REGISTER")');
+
+    // should still be on register page
+    await expect(page).toHaveURL('http://localhost:3000/register');
+
+  });
+
+  test.afterEach(async () => {
+    if (uniqueEmail) {
+      console.log(`Deleting test user account: ${uniqueEmail}`);
+      await deleteUserByEmail(uniqueEmail);
+    }
+  });
+
 });
