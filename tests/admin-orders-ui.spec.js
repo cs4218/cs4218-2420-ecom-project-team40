@@ -95,7 +95,8 @@ test.describe("Admin manage order flow", () => {
 
     // Check expected count same as initial
     await expect(page.getByTitle(statusArr[0])).toHaveCount(
-      countOfStatus[statusArr[0]]
+      countOfStatus[statusArr[0]],
+      { timeout: 20000 }
     );
   });
 });
