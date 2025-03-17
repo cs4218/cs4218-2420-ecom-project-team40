@@ -117,13 +117,13 @@ const CreateProduct = () => {
                   ))}
                 </Select>
 
-                <label
+                {/* <label
                   data-testid="category-req"
                   hidden={!showCategoryReqMsg}
                   className="text-danger"
                 >
                   Category is required
-                </label>
+                </label> */}
               </div>
 
               <div className="mb-3">
@@ -137,9 +137,9 @@ const CreateProduct = () => {
                     hidden
                   />
                 </label>
-                <label hidden={!showEmptyPhotoMsg} className="text-danger">
+                {/* <label hidden={!showEmptyPhotoMsg} className="text-danger">
                   Photo upload is required
-                </label>
+                </label> */}
               </div>
               <div className="mb-3">
                 {photo && (
@@ -207,9 +207,9 @@ const CreateProduct = () => {
                   <Option value="0">No</Option>
                   <Option value="1">Yes</Option>
                 </Select>
-                <label hidden={!showShippingReqMsg} className="text-danger">
+                {/* <label hidden={!showShippingReqMsg} className="text-danger">
                   Shipping is required
-                </label>
+                </label> */}
               </div>
               <div className="mb-3">
                 <button
