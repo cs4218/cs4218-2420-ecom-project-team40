@@ -11,11 +11,12 @@ module.exports = {
     "<rootDir>/middlewares/*.test.js",
     "<rootDir>/helpers/*.test.js",
     "<rootDir>/config/*.test.js",
+    "<rootDir>/routes/*.test.js"
   ],
 
   // jest code coverage
   collectCoverage: true,
-  collectCoverageFrom: ["controllers/**", "middlewares/**", "helpers/**", "config/**"],
+  collectCoverageFrom: ["controllers/**", "middlewares/**", "helpers/**", "config/**", "routes/**"],
   coverageThreshold: {
     global: {
       lines: 80,
