@@ -29,10 +29,10 @@ const CartPage = () => {
     });
   };
   //delete item
-  const removeCartItem = (pid) => {
+  const removeCartItem = (itemCart_id) => {
     try {
       let myCart = [...cart];
-      let index = myCart.findIndex((item) => item._id === pid);
+      let index = myCart.findIndex((item) => item.itemCart_id === itemCart_id);
       myCart.splice(index, 1);
       setCart(myCart);
       localStorage.setItem("cart", JSON.stringify(myCart));
@@ -100,7 +100,7 @@ const CartPage = () => {
           <div className="row ">
             <div className="col-md-7  p-0 m-0">
               {cart?.map((p) => (
-                <div className="row card flex-row" key={p._id}>
+                <div className="row card flex-row" key={p.itemCart_id}>
                   <div className="col-md-4">
                     <img
                       src={`/api/v1/product/product-photo/${p._id}`}
@@ -118,7 +118,7 @@ const CartPage = () => {
                   <div className="col-md-4 cart-remove-btn">
                     <button
                       className="btn btn-danger"
-                      onClick={() => removeCartItem(p._id)}
+                      onClick={() => removeCartItem(p.itemCart_id)}
                     >
                       Remove
                     </button>
@@ -172,7 +172,8 @@ const CartPage = () => {
                   ""
                 ) : (
                   <>
-                    <DropIn data-testid="dropin"
+                    <DropIn
+                      data-testid="dropin"
                       options={{
                         authorization: clientToken,
                         paypal: {
