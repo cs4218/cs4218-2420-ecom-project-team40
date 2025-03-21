@@ -2,6 +2,7 @@
 const { test, expect } = require("@playwright/test");
 
 test.describe("user menu renders correctly", () => {
+  // test.beforeEach(async ({ page }) => {});
 
   test("user logins and see user menu successfully", async ({ page }) => {
 

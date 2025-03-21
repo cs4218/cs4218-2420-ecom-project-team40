@@ -6,7 +6,7 @@ test.describe('Dashboard Page Tests', () => {
 
   let uniqueEmail;
 
-  test('should update the status of your order once there is a change', async ({ page }) => {
+  test('should render the user details in dashboard', async ({ page }) => {
     await page.goto('http://localhost:3000/register', {waitUntil: "commit"});
     uniqueEmail = `testregister${Date.now()}@gmail.com`;  
 

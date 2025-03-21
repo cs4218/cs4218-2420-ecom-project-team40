@@ -7,11 +7,10 @@ module.exports = {
 
   // which test to run
   testMatch: [
-    // "<rootDir>/controllers/*.test.js",
-    // "<rootDir>/middlewares/*.test.js",
-    // "<rootDir>/helpers/*.test.js",
-    // "<rootDir>/config/*.test.js",
-    "<rootDir>/routes/authRoute.test.js"
+    "<rootDir>/controllers/*.test.js",
+    "<rootDir>/middlewares/*.test.js",
+    "<rootDir>/helpers/*.test.js",
+    "<rootDir>/config/*.test.js",
   ],
 
   // jest code coverage
