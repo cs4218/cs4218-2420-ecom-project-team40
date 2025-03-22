@@ -21,6 +21,17 @@ module.exports = {
 
   // only run these tests
   testMatch: [
+    "<rootDir>/client/src/pages/About.test.js",
+    "<rootDir>/client/src/pages/Categories.test.js",
+    "<rootDir>/client/src/components/Form/CategoryForm.test.js",
+    "<rootDir>/client/src/pages/Categories.test.js",
+    "<rootDir>/client/src/pages/CategoryProduct.test.js",
+    "<rootDir>/client/src/pages/Pagenotfound.test.js",
+    "<rootDir>/client/src/components/Spinner.test.js",
+    "<rootDir>/client/src/hooks/useCategory.test.js",
+    "<rootDir>/client/src/pages/ProductDetails.test.js",
+    "<rootDir>/client/src/pages/admin/CreateCategory.test.js",
+
     "<rootDir>/client/src/context/cart.test.js",
     "<rootDir>/client/src/**/*.test.js",
     "<rootDir>/client/src/pages/Auth/*.test.js",
@@ -50,6 +61,16 @@ module.exports = {
   collectCoverage: true,
 
   collectCoverageFrom: [
+    "client/src/pages/About.js",
+    "client/src/pages/Categories.js",
+    "client/src/components/Form/CategoryForm.js",
+    "client/src/pages/Categories.js",
+    "client/src/pages/CategoryProduct.js",
+    "client/src/pages/Pagenotfound.js",
+    "client/src/components/Spinner.js",
+    "client/src/hooks/useCategory.js",
+    "<rootDir>/client/src/pages/admin/CreateCategory.js",
+
     "client/src/context/cart.js",
     "client/src/pages/Auth/**",
     "client/src/pages/CartPage.js",
@@ -67,7 +88,7 @@ module.exports = {
     "client/src/pages/admin/AdminDashboard.js",
     "client/src/components/AdminMenu.js",
     "client/src/components/UserMenu.js",
-    "client/src/pages/user/Profile.test.js",
+    "client/src/pages/user/Profile.js",
     "client/src/pages/admin/Users.js",
     "client/src/pages/admin/Products.js",
     "client/src/pages/admin/CreateProduct.js",
