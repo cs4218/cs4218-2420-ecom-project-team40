@@ -73,7 +73,7 @@ test.describe('Dashboard Page Tests', () => {
 
     await page.getByRole("link", { name: "Orders" }).click();
     await expect(page.getByText("A high-end smartphone")).toBeVisible({ timeout: 10000 });
-    await expect(page.getByText("Not Process")).toBeVisible();
+    await expect(page.getByText("Not Processed")).toBeVisible();
 
     await page.getByRole("button", { name: "John Doe" }).click();
     await expect(page.getByRole("link", { name: "Logout" })).toBeVisible();
@@ -92,7 +92,7 @@ test.describe('Dashboard Page Tests', () => {
     await page.getByRole("link", { name: "Dashboard" }).click();
     await page.getByRole("link", { name: "Orders" }).click();
     await expect(page.getByText('Smartphone', { exact: true }).nth(1)).toBeVisible();
-    await expect(page.getByRole('cell', { name: 'Not Process' }).locator('div').first()).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'Not Processed' }).locator('div').first()).toBeVisible();
     await page.locator('td:nth-child(2)').first().click();
     await page.locator('.rc-virtual-list-holder-inner > div:nth-child(2)').click();
     

@@ -42,7 +42,7 @@ describe("Orders Component", () => {
     const mockOrders = [
       {
         _id: "1",
-        status: "Not Process",
+        status: "Not Processed",
         buyer: { name: "John Doe" },
         createAt: "2025-02-04T13:42:16.741Z",
         payment: { success: true },
@@ -68,7 +68,7 @@ describe("Orders Component", () => {
     await waitFor(() => {
       expect(screen.getByText("All Orders")).toBeInTheDocument();
       expect(screen.getByText("John Doe")).toBeInTheDocument();
-      expect(screen.getByText("Not Process")).toBeInTheDocument();
+      expect(screen.getByText("Not Processed")).toBeInTheDocument();
       expect(screen.getByText("Product 1")).toBeInTheDocument();
       expect(screen.getByText("Success")).toBeInTheDocument();
       
@@ -82,7 +82,7 @@ describe("Orders Component", () => {
     const mockOrders = [
       {
         _id: "1",
-        status: "Not Process",
+        status: "Not Processed",
         buyer: { name: "John Doe" },
         createAt: "2025-02-04T13:42:16.741Z",
         payment: { success: false },
@@ -108,7 +108,7 @@ describe("Orders Component", () => {
     await waitFor(() => {
       expect(screen.getByText("All Orders")).toBeInTheDocument();
       expect(screen.getByText("John Doe")).toBeInTheDocument();
-      expect(screen.getByText("Not Process")).toBeInTheDocument();
+      expect(screen.getByText("Not Processed")).toBeInTheDocument();
       expect(screen.getByText("Product 1")).toBeInTheDocument();
       expect(screen.getByText("Failed")).toBeInTheDocument();
       expect(screen.getByText("Product 2")).toBeInTheDocument();
@@ -165,5 +165,153 @@ describe("Orders Component", () => {
     });
 
     outputSpy.mockRestore();
+  });
+
+  it("should render orders to be Processing if the order status is processing", async () => {
+    useAuth.mockReturnValue([{ token: "mockToken" }, jest.fn()]);
+    
+    const mockOrders = [
+      {
+        _id: "1",
+        status: "Processing",
+        buyer: { name: "John Doe" },
+        createAt: "2025-02-04T13:42:16.741Z",
+        payment: { success: true },
+        products: [
+          { _id: "p1", name: "Product 1", description: "Test Product 1", price: 100 },
+        ],
+      }
+    ];
+    
+    axios.get.mockResolvedValue({ data: mockOrders });
+    
+    render(
+      <MemoryRouter>
+        <Orders />
+      </MemoryRouter>
+    );
+    
+    await waitFor(() => {
+      expect(axios.get).toHaveBeenCalledWith("/api/v1/auth/orders");
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("All Orders")).toBeInTheDocument();
+      expect(screen.getByText("John Doe")).toBeInTheDocument();
+      expect(screen.getByText("Processing")).toBeInTheDocument();
+      expect(screen.getByText("Product 1")).toBeInTheDocument();
+      expect(screen.getByText("Success")).toBeInTheDocument();
+    });
+  });
+
+  it("should render orders to be Shipped if the order status is shipped", async () => {
+    useAuth.mockReturnValue([{ token: "mockToken" }, jest.fn()]);
+    
+    const mockOrders = [
+      {
+        _id: "1",
+        status: "Shipped",
+        buyer: { name: "John Doe" },
+        createAt: "2025-02-04T13:42:16.741Z",
+        payment: { success: true },
+        products: [
+          { _id: "p1", name: "Product 1", description: "Test Product 1", price: 100 },
+        ],
+      }
+    ];
+    
+    axios.get.mockResolvedValue({ data: mockOrders });
+    
+    render(
+      <MemoryRouter>
+        <Orders />
+      </MemoryRouter>
+    );
+    
+    await waitFor(() => {
+      expect(axios.get).toHaveBeenCalledWith("/api/v1/auth/orders");
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("All Orders")).toBeInTheDocument();
+      expect(screen.getByText("John Doe")).toBeInTheDocument();
+      expect(screen.getByText("Shipped")).toBeInTheDocument();
+      expect(screen.getByText("Product 1")).toBeInTheDocument();
+      expect(screen.getByText("Success")).toBeInTheDocument();
+    });
+  });
+
+  it("should render orders to be delivered if the order status is delivered", async () => {
+    useAuth.mockReturnValue([{ token: "mockToken" }, jest.fn()]);
+    
+    const mockOrders = [
+      {
+        _id: "1",
+        status: "Delivered",
+        buyer: { name: "John Doe" },
+        createAt: "2025-02-04T13:42:16.741Z",
+        payment: { success: true },
+        products: [
+          { _id: "p1", name: "Product 1", description: "Test Product 1", price: 100 },
+        ],
+      }
+    ];
+    
+    axios.get.mockResolvedValue({ data: mockOrders });
+    
+    render(
+      <MemoryRouter>
+        <Orders />
+      </MemoryRouter>
+    );
+    
+    await waitFor(() => {
+      expect(axios.get).toHaveBeenCalledWith("/api/v1/auth/orders");
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("All Orders")).toBeInTheDocument();
+      expect(screen.getByText("John Doe")).toBeInTheDocument();
+      expect(screen.getByText("Delivered")).toBeInTheDocument();
+      expect(screen.getByText("Product 1")).toBeInTheDocument();
+      expect(screen.getByText("Success")).toBeInTheDocument();
+    });
+  });
+
+  it("should render orders to be delivered if the order status is cancelled", async () => {
+    useAuth.mockReturnValue([{ token: "mockToken" }, jest.fn()]);
+    
+    const mockOrders = [
+      {
+        _id: "1",
+        status: "Cancelled",
+        buyer: { name: "John Doe" },
+        createAt: "2025-02-04T13:42:16.741Z",
+        payment: { success: true },
+        products: [
+          { _id: "p1", name: "Product 1", description: "Test Product 1", price: 100 },
+        ],
+      }
+    ];
+    
+    axios.get.mockResolvedValue({ data: mockOrders });
+    
+    render(
+      <MemoryRouter>
+        <Orders />
+      </MemoryRouter>
+    );
+    
+    await waitFor(() => {
+      expect(axios.get).toHaveBeenCalledWith("/api/v1/auth/orders");
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("All Orders")).toBeInTheDocument();
+      expect(screen.getByText("John Doe")).toBeInTheDocument();
+      expect(screen.getByText("Cancelled")).toBeInTheDocument();
+      expect(screen.getByText("Product 1")).toBeInTheDocument();
+      expect(screen.getByText("Success")).toBeInTheDocument();
+    });
   });
 });

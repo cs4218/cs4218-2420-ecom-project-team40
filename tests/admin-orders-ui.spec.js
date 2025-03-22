@@ -33,13 +33,13 @@ test.describe("Admin manage order flow", () => {
       skip(); // Skip if no order as below requires order to test
     }
 
-    // Reset first order to not process yet
+    // Reset first order to Not Processed yet
     await page.locator(".ant-select-selection-item").first().click();
     await page.locator(".ant-select-item").first().click();
     await page.reload(); // load the items again for selector to select based on appearance order
   });
 
-  // Assumes that one order is in not process status
+  // Assumes that one order is in Not Processed status
   test("Can navigate to order page and update status", async ({ page }) => {
     // Check orders page
     await expect(page.getByText("All Orders")).toBeVisible();
@@ -51,7 +51,7 @@ test.describe("Admin manage order flow", () => {
 
     // Count each status for tallying changes
     const statusArr = [
-      "Not Process",
+      "Not Processed",
       "Processing",
       "Shipped",
       "Delivered",
