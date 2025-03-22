@@ -99,6 +99,12 @@ test.describe('CategoryForm Component', () => {
     const newRows = await page.$$('tbody tr');
     console.log('New category count:', newRows.length);
     expect(newRows.length).toBeGreaterThan(initialCount);
+
+    // Verify category in header dropdown
+    await page.reload();
+    await page.getByRole('link', { name: 'Categories' }).click();
+    const headerCategoryLink = await page.getByRole('link', { name: categoryName });
+    await expect(headerCategoryLink).toBeVisible();
     
     // Check edit and delete buttons
     const editButton = await page.locator('tr', { has: page.getByText(categoryName) }).getByRole('button', { name: 'Edit' });
@@ -117,11 +123,16 @@ test.describe('CategoryForm Component', () => {
       console.log('No delete success toast found');
     }
 
-    // Verify category removal
+    // Wait for deletion to complete and page to update
     await page.waitForTimeout(2000);
-    const deletedCategoryCell = await page.$(`text=${categoryName}`);
-    expect(deletedCategoryCell).toBeNull();
-    await expect(categoryCell).not.toBeVisible();
+    
+    // Verify category removal - using a more reliable approach
+    await expect(page.getByRole('cell', { name: categoryName })).not.toBeVisible();
+    
+    // Verify category is also removed from header dropdown
+    await page.reload();
+    await page.getByRole('link', { name: 'Categories' }).click();
+    await expect(page.getByRole('link', { name: categoryName })).not.toBeVisible();
   });
 
   test('should handle editing an existing category', async ({ page }) => {
