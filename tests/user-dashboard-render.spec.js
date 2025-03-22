@@ -32,6 +32,36 @@ test.describe('Dashboard Page Tests', () => {
   let uniqueEmail1;
   let uniqueEmail2;
 
+  test('should be able to navigate to the dashboard', async ({ page }) => {
+    await page.goto('http://localhost:3000/register', {waitUntil: "commit"});
+    uniqueEmail = `testregister${Date.now()}@gmail.com`;  
+
+    await page.fill('input#exampleInputName1', 'John Doe');
+    await page.fill('input#exampleInputEmail1', uniqueEmail); 
+    await page.fill('input#exampleInputPassword1', 'testPassword');
+    await page.fill('input#exampleInputPhone1', '33333333');
+    await page.fill('input#exampleInputaddress1', 'NUS SoC, Singapore');
+    await page.fill('input#exampleInputDOB1', '2025-01-01');
+    await page.fill('input#exampleInputanswer1', 'Test');
+
+    await page.click('button:has-text("REGISTER")');
+
+    await expect(page).toHaveURL('http://localhost:3000/login');
+    await page
+      .getByRole("textbox", { name: "Enter Your Email" })
+      .fill(uniqueEmail);
+    await page
+      .getByRole("textbox", { name: "Enter Your Password" })
+      .fill("testPassword");
+    await page.getByRole("button", { name: "LOGIN" }).click();
+
+    await page.getByRole("button", { name: "John Doe" }).click();
+    await expect(page.getByRole("link", { name: "Logout" })).toBeVisible();
+    await page.getByRole("link", { name: "Dashboard" }).click();
+    await expect(page.getByText("Profile")).toBeVisible();
+    await expect(page.getByText("Orders")).toBeVisible();
+  });
+
   test('should render the user details in dashboard', async ({ page }) => {
     await page.goto('http://localhost:3000/register', {waitUntil: "commit"});
     uniqueEmail = `testregister${Date.now()}@gmail.com`;  
