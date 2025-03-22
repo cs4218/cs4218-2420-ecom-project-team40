@@ -31,7 +31,6 @@ module.exports = {
     "<rootDir>/client/src/hooks/useCategory.test.js",
     "<rootDir>/client/src/pages/ProductDetails.test.js",
     "<rootDir>/client/src/pages/admin/CreateCategory.test.js",
-
     "<rootDir>/client/src/context/cart.test.js",
     "<rootDir>/client/src/**/*.test.js",
     "<rootDir>/client/src/pages/Auth/*.test.js",
@@ -70,7 +69,6 @@ module.exports = {
     "client/src/components/Spinner.js",
     "client/src/hooks/useCategory.js",
     "<rootDir>/client/src/pages/admin/CreateCategory.js",
-
     "client/src/context/cart.js",
     "client/src/pages/Auth/**",
     "client/src/pages/CartPage.js",
