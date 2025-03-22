@@ -29,7 +29,7 @@ describe("Order Model Test with In-Memory Database", () => {
     const savedOrder = await newOrder.save();
 
     expect(savedOrder._id).toBeDefined();
-    expect(savedOrder.status).toBe("Not Process"); // Default status
+    expect(savedOrder.status).toBe("Not Processed"); // Default status
   });
 
   test("should fail to save an order if products are missing", async () => {
