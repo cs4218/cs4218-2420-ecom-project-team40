@@ -55,7 +55,7 @@ test.describe("Admin manage order flow", () => {
       "Processing",
       "Shipped",
       "Delivered",
-      "Cancel",
+      "Cancelled",
     ];
     const countOfStatus = {};
     for (let i = 0; i < statusArr.length; i++) {
