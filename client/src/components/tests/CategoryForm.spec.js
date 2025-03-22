@@ -67,39 +67,69 @@ test.describe('CategoryForm Component', () => {
     await expect(input).toHaveValue('Test Category');
   });
 
-  test('should handle form submission', async ({ page }) => {
+  test('should handle form submission and create new category', async ({ page }) => {
     // Wait for the input to be present
     await page.waitForSelector('[placeholder="Enter new category"]', { state: 'attached', timeout: 10000 });
     const input = await page.getByPlaceholder('Enter new category');
     
-    // Fill the form
-    await input.fill('Test Category');
+    // Generate a unique category name using timestamp
+    const categoryName = `Test Category ${Date.now()}`;
     
-    // Get initial category count if the list exists
-    let initialCount = 0;
-    try {
-      const initialCategories = await page.$$('[data-testid="category-item"]');
-      initialCount = initialCategories.length;
-    } catch (e) {
-      console.log('No existing categories found');
-    }
+    // Fill the form
+    await input.fill(categoryName);
+    
+    // Get initial categories from the table
+    const initialRows = await page.$$('tbody tr');
+    const initialCount = initialRows.length;
+    console.log('Initial category count:', initialCount);
     
     // Submit the form
     const submitButton = await page.getByRole('button', { name: 'Submit' });
     await submitButton.click();
     
-    // Wait for potential success message or new category to appear
-    await page.waitForTimeout(2000);
+    // Verify the category was created by checking the list
+    // Wait for the category to appear in the list
+    await page.waitForTimeout(2000); // Wait for list to update
     
-    // Verify the input value remains (since clearing is handled by parent component)
-    await expect(input).toHaveValue('Test Category');
+    // Wait for the table to update
+    await page.waitForTimeout(1000);
     
-    // Optionally verify new category was added (if the UI updates immediately)
+    // Verify the new category appears in the table
+    const categoryCell = await page.getByRole('cell', { name: categoryName });
+    await expect(categoryCell).toBeVisible();
+    
+    // Verify category count increased by checking table rows
+    const newRows = await page.$$('tbody tr');
+    console.log('New category count:', newRows.length);
+    expect(newRows.length).toBeGreaterThan(initialCount);
+    
+    // Test that the category has edit button
+    const editButton = await page.locator('tr', { has: page.getByText(categoryName) }).getByRole('button', { name: 'Edit' });
+    await expect(editButton).toBeVisible();
+    
+    // Test that the category has delete button
+    const deleteButton = await page.locator('tr', { has: page.getByText(categoryName) }).getByRole('button', { name: 'Delete' });
+    await expect(deleteButton).toBeVisible();
+    
+    // Clean up: Delete the test category
+    await deleteButton.click();
+    
+    // Wait for delete success
     try {
-      const newCategories = await page.$$('[data-testid="category-item"]');
-      await expect(newCategories.length).toBeGreaterThan(initialCount);
+      await page.waitForSelector('div:text-matches("is deleted")', { timeout: 5000 });
+      console.log('Delete success toast appeared');
     } catch (e) {
-      console.log('Could not verify category count change');
+      console.log('No delete success toast found');
     }
+
+    // Verify the category was removed from the table
+    await page.waitForTimeout(2000); // Wait for list to update
+
+    // Verify the category is no longer in the table
+    const deletedCategoryCell = await page.$(`text=${categoryName}`);
+    expect(deletedCategoryCell).toBeNull();
+    
+    // Verify the category was removed
+    await expect(categoryCell).not.toBeVisible();
   });
 }); 
