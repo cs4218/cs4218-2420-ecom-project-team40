@@ -202,8 +202,8 @@ describe('getProductController', () => {
 
     const successfulReponse = {
       success: true,
-      counTotal: mockProducts.length,
-      message: "ALlProducts ",
+      countTotal: mockProducts.length,
+      message: "AllProducts ",
       products: mockProducts,
     }
   

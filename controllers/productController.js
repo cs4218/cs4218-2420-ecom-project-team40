@@ -1,6 +1,7 @@
 import productModel from "../models/productModel.js";
 import categoryModel from "../models/categoryModel.js";
 import orderModel from "../models/orderModel.js";
+import mongoose from "mongoose";
 
 import fs from "fs";
 import slugify from "slugify";
@@ -22,6 +23,7 @@ export const createProductController = async (req, res) => {
     const { name, description, price, category, quantity, shipping } =
       req.fields;
     const { photo } = req.files;
+
     //alidation
     switch (true) {
       case !name:
@@ -38,6 +40,15 @@ export const createProductController = async (req, res) => {
         return res
           .status(500)
           .send({ error: "photo is Required and should be less then 1mb" });
+    }
+
+    // Guard clause: Ensure price is not negative
+    if (price < 0) {
+      return res.status(400).send({ error: "Price cannot be negative" });
+    }
+    // Guard clause: Ensure quantity is not negative
+    if (quantity < 0) {
+      return res.status(400).send({ error: "Quantity cannot be negative" });
     }
 
     const products = new productModel({ ...req.fields, slug: slugify(name) });
@@ -72,8 +83,8 @@ export const getProductController = async (req, res) => {
       .sort({ createdAt: -1 });
     res.status(200).send({
       success: true,
-      counTotal: products.length,
-      message: "ALlProducts ",
+      countTotal: products.length,
+      message: "AllProducts ",
       products,
     });
   } catch (error) {
