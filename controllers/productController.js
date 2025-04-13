@@ -43,11 +43,11 @@ export const createProductController = async (req, res) => {
     }
 
     // Guard clause: Ensure price is not negative
-    if (price < 0) {
+    if (price <= 0) {
       return res.status(400).send({ error: "Price cannot be negative" });
     }
     // Guard clause: Ensure quantity is not negative
-    if (quantity < 0) {
+    if (quantity <= 0) {
       return res.status(400).send({ error: "Quantity cannot be negative" });
     }
 
