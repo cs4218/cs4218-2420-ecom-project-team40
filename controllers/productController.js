@@ -23,6 +23,7 @@ export const createProductController = async (req, res) => {
     const { name, description, price, category, quantity, shipping } =
       req.fields;
     const { photo } = req.files;
+
     //alidation
     switch (true) {
       case !name:
@@ -41,7 +42,16 @@ export const createProductController = async (req, res) => {
           .send({ error: "photo is Required and should be less then 1mb" });
     }
 
-    const products = new productModel({ ...req.fields, category: new mongoose.Types.ObjectId(category), slug: slugify(name) });
+    // Guard clause: Ensure price is not negative
+    if (price < 0) {
+      return res.status(400).send({ error: "Price cannot be negative" });
+    }
+    // Guard clause: Ensure quantity is not negative
+    if (quantity < 0) {
+      return res.status(400).send({ error: "Quantity cannot be negative" });
+    }
+
+    const products = new productModel({ ...req.fields, slug: slugify(name) });
     if (photo) {
       products.photo.data = fs.readFileSync(photo.path);
       products.photo.contentType = photo.type;
